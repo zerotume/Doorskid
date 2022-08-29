@@ -14,7 +14,8 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Server.init({
-    name: DataTypes.STRING
+    name: DataTypes.STRING,
+    ownerId: DataTypes.INTEGER
   }, {
     sequelize,
     modelName: 'Server',
