@@ -14,9 +14,21 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Directmessage.init({
-    fromId: DataTypes.INTEGER,
-    toId: DataTypes.INTEGER,
-    content: DataTypes.STRING
+    fromId: {
+      type:DataTypes.INTEGER,
+      allowNull:false
+    },
+    toId: {
+      type:DataTypes.INTEGER,
+      allowNull:false
+    },
+    content: {
+      type:DataTypes.STRING,
+      allowNull:false,
+      validate:{
+        len:[1,140]
+      }
+    }
   }, {
     sequelize,
     modelName: 'Directmessage',

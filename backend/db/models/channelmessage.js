@@ -11,12 +11,28 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      Channelmessage.belongsTo(
+        models.Channel,
+        {foreignKey:'channelId'}
+      )
     }
   }
   Channelmessage.init({
-    senderId: DataTypes.INTEGER,
-    channelId: DataTypes.INTEGER,
-    content: DataTypes.STRING
+    senderId: {
+      type:DataTypes.INTEGER,
+      allowNull:false,
+    },
+    channelId: {
+      type:DataTypes.INTEGER,
+      allowNull:false,
+    },
+    content: {
+      type:DataTypes.STRING,
+      allowNull:false,
+      validate:{
+        len:[1,140]
+      }
+    },
   }, {
     sequelize,
     modelName: 'Channelmessage',

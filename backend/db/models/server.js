@@ -11,11 +11,29 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      Server.belongsToMany(
+        models.User,
+        {through: models.UserServerBind}
+      );
+      Server.hasMany(
+        models.Channel,
+        {foreignKey:'serverId', onDelete:'CASCADE', hooks:true}
+      );
     }
   }
   Server.init({
-    name: DataTypes.STRING,
-    ownerId: DataTypes.INTEGER
+    name: {
+      type:DataTypes.STRING,
+      allowNull:false,
+      validate:{
+        len:[1,20],
+        isAlphanumeric: true,
+      }
+    },
+    ownerId: {
+      type:DataTypes.INTEGER,
+      allowNull:false
+    }
   }, {
     sequelize,
     modelName: 'Server',
