@@ -2,14 +2,22 @@ const express = require('express');
 const {check} = require('express-validator');
 const {handleValidationErrors} = require('../../utils/validation.js');
 
-const {setTokenCookie, restoreUser, requireAuth, serverReq, authorCheck} = require('../../utils/auth.js');
-const {User} = require('../../db/models');
-const {Server} = require('../../db/models');
+const {setTokenCookie, restoreUser, requireAuth, serverReq, authorCheck, serverUsersReq, authorListCheck} = require('../../utils/auth.js');
+const {User, Server, Channel} = require('../../db/models');
+
 
 const router = express.Router();
 
+router.get('/:id/users', restoreUser, requireAuth, serverUsersReq, authorListCheck, async (req,res,next) => {
+    let serverMembers = req.members;
+    return res.json(serverMembers)
+});
 
-
+router.get('/:id/channels', restoreUser, requireAuth, serverUsersReq, authorListCheck, async (req, res, next) => {
+    let server = req.server;
+    let serverChannels = await server.getChannels();
+    return res.json(serverChannels);
+});
 
 router.put('/:id', restoreUser, requireAuth, serverReq, authorCheck, async (req,res,next) => {
     let server = req.server;
@@ -19,7 +27,6 @@ router.put('/:id', restoreUser, requireAuth, serverReq, authorCheck, async (req,
     let updated = await Server.findByPk(req.params.id);
     return res.json(updated);
 });
-
 
 router.delete('/:id', restoreUser, requireAuth, serverReq, authorCheck, async(req,res,next) => {
     let server = req.server;
@@ -33,7 +40,13 @@ router.delete('/:id', restoreUser, requireAuth, serverReq, authorCheck, async(re
 router.get('/', restoreUser, requireAuth, async (req,res,next) => {
     const {user} = req;
     const joinedServers = await user.getServers({
-        joinTableAttributes: []
+        joinTableAttributes: [],
+        include:[
+            {
+                model:Channel,
+                required:false
+            }
+        ]
     });
 
     return res.json(joinedServers);

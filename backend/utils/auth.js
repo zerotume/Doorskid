@@ -69,6 +69,18 @@ const authorCheck = (req, res, next) => {
     return next();
 }
 
+const authorListCheck = (req,res,next) => {
+    let uid = req.user.toJSON().id;
+    if(!req.permit.includes(uid)){
+        const err = new Error("Forbidden");
+        err.title = "Forbidden";
+        err.message = "Forbidden";
+        err.status = 403;
+        return next(err);
+    }
+    return next();
+}
+
 const serverReq = async (req, res, next) => {
     let server = await Server.findByPk(req.params.id)
     if(!server){
@@ -83,5 +95,30 @@ const serverReq = async (req, res, next) => {
     return next();
 }
 
+const serverUsersReq = async (req,res,next) => {
+    let server = await Server.findByPk(req.params.id);
+    let members = await server.getUsers();
+    // console.log(members[0].toJSON());
+    let memberList = members.map(e => {
+        return e.toJSON().UserServerBind.userId;
+    });
+    req.server = server;
+    req.members = members.map(e => {
+        memberObj = e.toJSON();
+        delete memberObj.UserServerBind;
+        return memberObj;
+    })
+    req.permit = memberList;
+    return next();
+}
 
-module.exports = {setTokenCookie, restoreUser, requireAuth, serverReq, authorCheck};
+
+module.exports = {
+    setTokenCookie,
+    restoreUser,
+    requireAuth,
+    serverReq,
+    authorCheck,
+    serverUsersReq,
+    authorListCheck
+};
