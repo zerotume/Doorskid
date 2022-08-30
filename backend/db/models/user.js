@@ -58,7 +58,7 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       User.belongsToMany(
         models.Server,
-        { through:models.UserServerBind }
+        { through:models.UserServerBind, foreignKey:'userId'}
       );
     }
   }

@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 const {jwtConfig} = require('../config');
-const {User} = require('../db/models');
+const {User, Server, Channel, Channelmessage, Directmessage} = require('../db/models');
 
 const {secret, expiresIn} = jwtConfig;
 
@@ -57,4 +57,31 @@ const requireAuth = (req, _res, next) => {
     return next(err);
 }
 
-module.exports = {setTokenCookie, restoreUser, requireAuth};
+const authorCheck = (req, res, next) => {
+    let uid = req.user.toJSON().id;
+    if(uid !== req.permit){
+        const err = new Error("Forbidden");
+        err.title = "Forbidden";
+        err.message = "Forbidden";
+        err.status = 403;
+        return next(err);
+    }
+    return next();
+}
+
+const serverReq = async (req, res, next) => {
+    let server = await Server.findByPk(req.params.id)
+    if(!server){
+        const err = new Error("Server couldn't be found");
+        err.title = "Server couldn't be found";
+        err.message = "Server couldn't be found";
+        err.status = 404;
+        return next(err);
+    }
+    req.server = server;
+    req.permit = server.ownerId;
+    return next();
+}
+
+
+module.exports = {setTokenCookie, restoreUser, requireAuth, serverReq, authorCheck};

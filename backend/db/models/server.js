@@ -13,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       Server.belongsToMany(
         models.User,
-        {through: models.UserServerBind}
+        {through: models.UserServerBind, foreignKey:'serverId'}
       );
       Server.hasMany(
         models.Channel,
@@ -37,6 +37,9 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'Server',
+    defaultScope:{
+      attributes:["id","name","ownerId","createdAt","updatedAt"]
+    }
   });
   return Server;
 };
