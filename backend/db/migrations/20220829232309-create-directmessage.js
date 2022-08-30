@@ -9,21 +9,34 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       fromId: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        allowNull:false,
+        references:{
+          model:'Users',
+          key:'id'
+        }
       },
       toId: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        allowNull:false,
+        references:{
+          model:'Users',
+          key:'id'
+        }
       },
       content: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING(140),
+        allowNull:false
       },
       createdAt: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
       },
       updatedAt: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
       }
     });
   },

@@ -14,8 +14,14 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   UserServerBind.init({
-    userId: DataTypes.INTEGER,
-    serverId: DataTypes.INTEGER
+    userId: {
+      type:DataTypes.INTEGER,
+      allowNull:false
+    },
+    serverId: {
+      type:DataTypes.INTEGER,
+      allowNull:false
+    },
   }, {
     sequelize,
     modelName: 'UserServerBind',

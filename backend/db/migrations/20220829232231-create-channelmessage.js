@@ -9,21 +9,36 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       senderId: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        allowNull:false,
+        references:{
+          model:'Users',
+          key:'id'
+        },
+        onDelete:'cascade'
       },
       channelId: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        allowNull:false,
+        references:{
+          model:'Channels',
+          key:'id'
+        },
+        onDelete:'cascade'
       },
       content: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING(140),
+        allowNull:false
       },
       createdAt: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
       },
       updatedAt: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
       }
     });
   },
