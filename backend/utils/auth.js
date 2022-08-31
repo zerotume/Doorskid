@@ -52,7 +52,7 @@ const requireAuth = (req, _res, next) => {
 
     const err = new Error('Unauthorized');
     err.title = 'Unauthorized';
-    err.errors = ['Unauthorized'];
+    err.errors = {authen:'Unauthorized'};
     err.status = 401;
     return next(err);
 }
@@ -64,6 +64,7 @@ const authorCheck = (req, res, next) => {
         err.title = "Forbidden";
         err.message = "Forbidden";
         err.status = 403;
+        err.errors = {author:["Forbidden"]}
         return next(err);
     }
     return next();
@@ -75,6 +76,7 @@ const authorListCheck = (req,res,next) => {
         const err = new Error("Forbidden");
         err.title = "Forbidden";
         err.message = "Forbidden";
+        err.errors = {author:["Forbidden"]}
         err.status = 403;
         return next(err);
     }
@@ -87,11 +89,33 @@ const serverReq = async (req, res, next) => {
         const err = new Error("Server couldn't be found");
         err.title = "Server couldn't be found";
         err.message = "Server couldn't be found";
+        err.errors = {server:"Server couldn't be found"}
         err.status = 404;
         return next(err);
     }
     req.server = server;
     req.permit = server.ownerId;
+    return next();
+}
+
+const channelReq = async (req,res,next) => {
+    let channel = await Channel.findByPk(req.params.id,{
+        include:[
+            {
+                model:Server
+            }
+        ]
+    });
+    if(!channel){
+        const err = new Error("Channel couldn't be found");
+        err.title = "Channel couldn't be found";
+        err.message = "Channel couldn't be found";
+        err.errors = {channel:"Channel couldn't be found"}
+        err.status = 404;
+        return next(err);
+    }
+    req.channel = channel;
+    req.permit = channel.Server.ownerId;
     return next();
 }
 
@@ -120,5 +144,6 @@ module.exports = {
     serverReq,
     authorCheck,
     serverUsersReq,
-    authorListCheck
+    authorListCheck,
+    channelReq
 };

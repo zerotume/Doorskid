@@ -4,11 +4,13 @@ const handleValidationErrors = (req, _res, next) => {
     const validationErrors = validationResult(req);
 
     if(!validationErrors.isEmpty()){
-        const errors = validationErrors
-                        .array().map(e => `${e.msg}`);
-
+        const errorObj = {};
+        const errors = validationErrors.array()
+        for(let e of errors){
+            errorObj[e.param] = e.msg;
+        }
         const err = Error('Bad Request.');
-        err.errors = errors;
+        err.errors = errorObj;
         err.status = 400;
         err.title = 'Bad Request.';
         next(err);
