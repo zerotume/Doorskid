@@ -7,7 +7,16 @@ const {User, Server, Channel, Channelmessage, Directmessage} = require('../../db
 
 const router = express.Router();
 
-
+const validateChannel = [
+    check('name')
+        .exists({checkFalsy:true})
+        .withMessage('Please provide a valid channel name with alphabates and numbers under 20 characters.')
+        .isLength({min:1,max:20})
+        .withMessage('Please provide a valid channel name with alphabates and numbers under 20 characters.')
+        .isAlphanumeric()
+        .withMessage('Please provide a valid channel name with alphabates and numbers under 20 characters.'),
+    handleValidationErrors
+];
 
 
 module.exports = router;

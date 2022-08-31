@@ -1,0 +1,34 @@
+\?
+\d
+SELECT * FROM users;
+.ext
+.exit
+exit
+\
+\q
+\d
+SELECT * FROM users;
+\q
+\d
+SELECT * FROM users
+;
+\d
+\q
+\d
+\q
+\d
+\q
+\d
+SELECT * FROM users;
+\q
+\d
+\q
+SELECT * FROM carts;
+\q
+\d
+\q
+\d
+\q
+\d
+s Users
+\s Users

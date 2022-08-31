@@ -19,6 +19,24 @@ router.get('/:id/channels', restoreUser, requireAuth, serverUsersReq, authorList
     return res.json(serverChannels);
 });
 
+const validateChannel = [
+    check('name')
+        .exists({checkFalsy:true})
+        .withMessage('Please provide a valid channel name with alphabates and numbers under 20 characters.')
+        .isLength({min:1,max:20})
+        .withMessage('Please provide a valid channel name with alphabates and numbers under 20 characters.')
+        .isAlphanumeric()
+        .withMessage('Please provide a valid channel name with alphabates and numbers under 20 characters.'),
+    handleValidationErrors
+];
+
+router.post('/:id/channels', restoreUser, requireAuth, serverReq, authorCheck, validateChannel, async (req,res,next) => {
+    const {name} = req.body;
+    const server = req.server;
+    const newChannel = await server.createChannel({name});
+    return res.json(newChannel);
+});
+
 router.put('/:id', restoreUser, requireAuth, serverReq, authorCheck, async (req,res,next) => {
     let server = req.server;
     const {name} = req.body;
@@ -55,9 +73,11 @@ router.get('/', restoreUser, requireAuth, async (req,res,next) => {
 const validateServer = [
     check('name')
         .exists({checkFalsy:true})
+        .withMessage('Please provide a valid server name with alphabates and numbers under 20 characters.')
         .isLength({min:1,max:20})
+        .withMessage('Please provide a valid server name with alphabates and numbers under 20 characters.')
         .isAlphanumeric()
-        .withMessage('Please provide a valid server name with alphabates and numbers.'),
+        .withMessage('Please provide a valid server name with alphabates and numbers under 20 characters.'),
     handleValidationErrors
 ];
 
