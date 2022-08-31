@@ -99,14 +99,24 @@ const serverReq = async (req, res, next) => {
 }
 
 const channelReq = async (req,res,next) => {
-    let channel = await Channel.findByPk({
-        includes:[
+    let channel = await Channel.findByPk(req.params.id,{
+        include:[
             {
                 model:Server
             }
         ]
     });
-    console.log(channel);
+    if(!channel){
+        const err = new Error("Channel couldn't be found");
+        err.title = "Channel couldn't be found";
+        err.message = "Channel couldn't be found";
+        err.errors = {channel:"Channel couldn't be found"}
+        err.status = 404;
+        return next(err);
+    }
+    req.channel = channel;
+    req.permit = channel.Server.ownerId;
+    return next();
 }
 
 const serverUsersReq = async (req,res,next) => {
@@ -134,5 +144,6 @@ module.exports = {
     serverReq,
     authorCheck,
     serverUsersReq,
-    authorListCheck
+    authorListCheck,
+    channelReq
 };
