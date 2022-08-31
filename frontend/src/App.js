@@ -4,6 +4,7 @@ import { Route, Switch } from "react-router";
 import LoginFormPage from "./components/LoginFormPage";
 import Navigation from "./components/Navigation";
 import SignupFormPage from "./components/SignupFormPage";
+import SplashPage from "./components/SplashPage/SplashPage";
 import * as sessionActions from './store/session';
 
 function App() {
@@ -16,9 +17,12 @@ function App() {
 
   return (
     <div>
-      <h1>Hello from App</h1>
-      <Navigation sessionLoaded={sessionLoaded}/>
+      {/* <h1>Hello from App</h1> */}
+      {/* <Navigation sessionLoaded={sessionLoaded}/> */}
       <Switch>
+        <Route path="/" exact>
+          <SplashPage />
+        </Route>
         <Route path="/login">
           <LoginFormPage />
         </Route>
