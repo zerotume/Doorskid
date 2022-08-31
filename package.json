@@ -15,15 +15,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/zerotume/full-clone-hengAirBnB.git"
+    "url": "git+https://github.com/zerotume/Doorskid.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/zerotume/full-clone-hengAirBnB/issues"
+    "url": "https://github.com/zerotume/Doorskid/issues"
   },
-  "homepage": "https://github.com/zerotume/full-clone-hengAirBnB#readme",
+  "homepage": "https://github.com/zerotume/Doorskid#readme",
   "dependencies": {
     "file-loader": "^6.2.0",
     "react-datepicker": "^4.8.0",
