@@ -13,7 +13,7 @@ router.get('/', restoreUser, (req, res) => {
     // res.cookie('XSRF-Token', req.csrfToken());
     const {user} = req;
     if(user) {
-        return res.json({user: user.toSafeObjectWithTime()});
+        return res.json({user: user.toSafeObject()});
     }else{
         return res.json({});
     }

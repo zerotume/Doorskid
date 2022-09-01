@@ -62,7 +62,8 @@ router.get('/', restoreUser, requireAuth, async (req,res,next) => {
         include:[
             {
                 model:Channel,
-                required:false
+                required:false,
+                order:[['id']]
             }
         ]
     });

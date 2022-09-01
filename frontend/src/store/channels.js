@@ -96,7 +96,7 @@ export default function channelReducer(state = {}, action){
         case GET_CHANNELS:{
             const newState = {};
             action.channels.forEach(channel => {
-                newState[channel.id] = newState
+                newState[channel.id] = channel
             });
             newState.channelList = [...action.channels].sort((a,b) => a.id-b.id);
             return newState;

@@ -96,7 +96,8 @@ export default function serverReducer(state = {}, action){
         case GET_SERVERS:{
             const newState = {};
             action.servers.forEach(server => {
-                newState[server.id] = newState
+                newState[server.id] = server
+                server.Channels = server.Channels.sort((a,b) => a.id-b.id);
             });
             newState.serverList = [...action.servers].sort((a,b) => a.id-b.id);
             return newState;
