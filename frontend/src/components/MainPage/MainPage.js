@@ -24,6 +24,20 @@ function MainPage(){
 
     // if(!sessionUser) return history.push('/');
 
+    return (
+    <div className="main-page-container">
+        <div className="server-list">
+            {servers &&
+                servers.serverList &&
+                servers.serverList.length &&
+                servers.serverList.map(e => (
+                    <button className="server-item-button">{e.name}</button>
+                ))}
+        </div>
+
+    </div>
+    )
+
 }
 
 
