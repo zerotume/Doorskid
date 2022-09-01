@@ -32,7 +32,7 @@ function App() {
           <SignupFormPage />
         </Route>
         <Route path="/main">
-          <MainPage />
+          <MainPage sessionLoaded={sessionLoaded}/>
         </Route>
       </Switch>
     </div>

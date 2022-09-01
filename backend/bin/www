@@ -6,13 +6,30 @@ const { port } = require('../config');
 
 const app = require('../app');
 const db = require('../db/models');
+const http = require('http');
+
+const server = http.createServer(app);
+const io = require("socket.io")(server);
+io.on("connection", socket => {
+  socket.on("channelMessage",
+          async ({serverId, channelId, content, userId, sendTime}) => {
+    const d = new Date();
+    receiveTime = d.getTime()
+    console.log({serverId, channelId, content, userId});
+    console.log("Delayed ", (receiveTime - sendTime)/60000);
+
+  })
+})
+
 
 db.sequelize
   .authenticate()
   .then(() => {
     console.log('Database connection success! Sequelize is ready to use...');
 
-    app.listen(port, () => console.log(`Listening on port ${port}...`));
+    server.listen(port, () => console.log(`Listening on port ${port}...`));
+    // server.on("error", onError);
+    // server.on("listening", onListening);
   })
   .catch((err) => {
     console.log('Database connection failure.');
