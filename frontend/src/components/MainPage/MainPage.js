@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, BrowserRouter as Router, useHistory, Switch, Route, useParams, useRouteMatch } from "react-router-dom";
 import { getServersThunk } from "../../store/servers";
 import io from "socket.io-client";
+import { getChannelmessagesThunk } from "../../store/channelmessages";
 const SOCKET_IO_URL = "ws://localhost:3000";
 const socket = io(SOCKET_IO_URL);
 
@@ -59,10 +60,20 @@ function MainPage({sessionLoaded}){
 }
 function ServerChannels({servers, path, url, user}){
 
+    const dispatch = useDispatch();
     let {serverId, channelId} = useParams();
     let userId = user.id;
     let channels = [];
+    const [isLoaded, setIsLoaded] = useState(false);
+    const channelmessages = useSelector(state => state.channelmessages);
     if(channelId !== 'none') channels = servers[serverId].Channels;
+
+    useEffect(() => {
+        dispatch(getChannelmessagesThunk(channelId)).then(() => setIsLoaded(true))
+        // if(!isLoaded && !sessionUser) return history.push('/');
+        console.log(channelmessages)
+
+    }, [dispatch, channelId]);
 
     // const connectToChannel = () => {
 
@@ -77,6 +88,18 @@ function ServerChannels({servers, path, url, user}){
         socket.emit("channelMessage", data);
     }
 
+    let messages = null;
+    if(channelmessages && channelmessages.channelmessageList && channelmessages.channelmessageList.length){
+        messages = (channelmessages.channelmessageList.map(e => (
+            <div className="single-message-container">
+                <div className="message-sender-container">{e.User.firstName} {e.User.lastName}</div>
+                <div className="message-content-container">{e.content}</div>
+            </div>
+        )))
+    }else{
+        messages = null;
+    }
+
     return (<div>
                 {channels.length &&
                     channels.map(c => (
@@ -87,8 +110,10 @@ function ServerChannels({servers, path, url, user}){
                 <h3>
                     Server {serverId} Channel {channelId}
                 </h3>
-                <div className="message-container">
 
+
+                <div className="messages-container">
+                    {isLoaded && messages}
                 </div>
                 <button onClick={submitMessage}>test</button>
             </div>)

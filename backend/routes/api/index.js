@@ -3,12 +3,14 @@ const sessionRouter = require('./session.js');
 const usersRouter = require('./users.js');
 const serversRouter = require('./servers.js');
 const channelsRouter = require('./channels.js');
+const channelMessagesRouter = require('./channelmessages.js');
 const {restoreUser} = require('../../utils/auth.js');
 router.use(restoreUser);
 router.use('/session', sessionRouter);
 router.use('/users', usersRouter);
 router.use('/servers', serversRouter);
 router.use('/channels', channelsRouter);
+router.use('/channelmessages', channelMessagesRouter);
 
 // router.post('/test', (req,res) => {
 //     res.json({requestBody:req.body});
