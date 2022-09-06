@@ -2,7 +2,7 @@ const express = require('express');
 const {check} = require('express-validator');
 const {handleValidationErrors} = require('../../utils/validation.js');
 
-const {setTokenCookie, requireAuth} = require('../../utils/auth.js');
+const {setTokenCookie, requireAuth, restoreUser} = require('../../utils/auth.js');
 const {User} = require('../../db/models');
 
 const router = express.Router();
@@ -36,5 +36,14 @@ router.post('/', validateSignup, async (req,res) => {
 
     return res.json({user});
 });
+
+router.get('/:id/servers', restoreUser, requireAuth, async (req, res) => {
+    let currentUser = await User.findByPk(req.params.id);
+    let userServers = await currentUser.getServers();
+    // let serverList = userServers.map(e => {
+    //     return e.toJson.UserServerBind.serverId;
+    // })
+    return res.json(userServers);
+})
 
 module.exports = router;

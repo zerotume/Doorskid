@@ -1,5 +1,6 @@
 import {legacy_createStore as createStore, combineReducers, applyMiddleware, compose, legacy_createStore} from 'redux';
 import thunk from 'redux-thunk';
+import channelmessageReducer from './channelmessages';
 import channelReducer from './channels';
 import serverReducer from './servers';
 import sessionReducer from './session';
@@ -7,7 +8,8 @@ import sessionReducer from './session';
 const rootReducer = combineReducers({
   session: sessionReducer,
   servers:serverReducer,
-  channels:channelReducer
+  channels:channelReducer,
+  channelmessages:channelmessageReducer
 });
 
 

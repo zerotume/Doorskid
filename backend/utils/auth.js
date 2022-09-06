@@ -121,11 +121,45 @@ const channelReq = async (req,res,next) => {
 
 const serverUsersReq = async (req,res,next) => {
     let server = await Server.findByPk(req.params.id);
+    if(!server){
+        const err = new Error("Server couldn't be found");
+        err.title = "Server couldn't be found";
+        err.message = "Server couldn't be found";
+        err.errors = {server:"Server couldn't be found"}
+        err.status = 404;
+        return next(err);
+    }
     let members = await server.getUsers();
     // console.log(members[0].toJSON());
     let memberList = members.map(e => {
         return e.toJSON().UserServerBind.userId;
     });
+    req.server = server;
+    req.members = members.map(e => {
+        memberObj = e.toJSON();
+        delete memberObj.UserServerBind;
+        return memberObj;
+    })
+    req.permit = memberList;
+    return next();
+}
+
+const channelUsersReq = async (req, res, next) => {
+    let channel = await Channel.findByPk(req.params.id);
+    if(!channel){
+        const err = new Error("Channel couldn't be found");
+        err.title = "Channel couldn't be found";
+        err.message = "Channel couldn't be found";
+        err.errors = {channel:"Channel couldn't be found"}
+        err.status = 404;
+        return next(err);
+    }
+    let server = await channel.getServer();
+    let members = await server.getUsers();
+    let memberList = members.map(e => {
+        return e.toJSON().UserServerBind.userId;
+    });
+    req.channel = channel;
     req.server = server;
     req.members = members.map(e => {
         memberObj = e.toJSON();
@@ -145,5 +179,6 @@ module.exports = {
     authorCheck,
     serverUsersReq,
     authorListCheck,
-    channelReq
+    channelReq,
+    channelUsersReq
 };

@@ -15,7 +15,13 @@ module.exports = (sequelize, DataTypes) => {
         models.Channel,
         {foreignKey:'channelId'}
       )
+
+      Channelmessage.belongsTo(
+        models.User,
+        {foreignKey:'senderId'}
+      )
     }
+
   }
   Channelmessage.init({
     senderId: {

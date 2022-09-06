@@ -60,6 +60,11 @@ module.exports = (sequelize, DataTypes) => {
         models.Server,
         { through:models.UserServerBind, foreignKey:'userId'}
       );
+
+      User.hasMany(
+        models.Channelmessage,
+        {foreignKey:'senderId', onDelete:'CASCADE', hooks:true}
+      );
     }
   }
   User.init({

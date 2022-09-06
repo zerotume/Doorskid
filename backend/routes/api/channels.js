@@ -2,9 +2,8 @@ const express = require('express');
 const {check} = require('express-validator');
 const {handleValidationErrors} = require('../../utils/validation.js');
 
-const {setTokenCookie, restoreUser, requireAuth, channelReq, authorCheck} = require('../../utils/auth.js');
+const {setTokenCookie, restoreUser, requireAuth, channelReq, authorCheck, channelUsersReq, authorListCheck} = require('../../utils/auth.js');
 const {User, Server, Channel, Channelmessage, Directmessage} = require('../../db/models');
-const server = require('../../db/models/server.js');
 
 const router = express.Router();
 
@@ -35,6 +34,23 @@ router.delete('/:id', restoreUser, requireAuth, channelReq, authorCheck, async (
         "message":"Successfully deleted",
         "statusCode": 200
     });
+})
+
+router.get('/:id/messages', restoreUser, requireAuth, channelUsersReq, authorListCheck, async (req, res, next) => {
+    // const channel = req.channel;
+
+    const channelmessages = await Channelmessage.findAll({
+        where:{
+            channelId:req.params.id
+        },
+        include:[
+            {
+                model:User,
+                required:false
+            }
+        ]
+    })
+    return res.json(channelmessages);
 })
 
 module.exports = router;

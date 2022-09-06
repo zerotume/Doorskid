@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, BrowserRouter as Router, useHistory, Switch, Route, useParams, useRouteMatch } from "react-router-dom";
 import { getServersThunk } from "../../store/servers";
 import io from "socket.io-client";
+import { getChannelmessagesThunk } from "../../store/channelmessages";
 const SOCKET_IO_URL = "ws://localhost:3000";
 const socket = io(SOCKET_IO_URL);
 
@@ -59,19 +60,54 @@ function MainPage({sessionLoaded}){
 }
 function ServerChannels({servers, path, url, user}){
 
+    const dispatch = useDispatch();
     let {serverId, channelId} = useParams();
     let userId = user.id;
     let channels = [];
+    const [isLoaded, setIsLoaded] = useState(false);
+    const [content, setContent] = useState('');
+    const channelmessages = useSelector(state => state.channelmessages);
     if(channelId !== 'none') channels = servers[serverId].Channels;
+
+    useEffect(() => {
+        dispatch(getChannelmessagesThunk(channelId)).then(() => setIsLoaded(true))
+        // if(!isLoaded && !sessionUser) return history.push('/');
+        // console.log(channelmessages)
+
+    }, [dispatch, channelId]);
+
+    useEffect(() => {
+        socket.on('channelbroadcast', data => {
+            console.log(data);
+            dispatch(getChannelmessagesThunk(channelId));
+        });
+    },[socket])
 
     // const connectToChannel = () => {
 
     // }
-    const submitMessage = e => {
+
+    socket.emit("join", userId);
+
+    const submitMessage = async e => {
         e.preventDefault();
         const d = new Date();
-        const data = {serverId, channelId, content:"test", userId, sendTime:d.getTime()};
-        socket.emit("channelMessage", data);
+        const data = {serverId, channelId, content, userId, sendTime:d.getTime()};
+        socket.emit("channelmessage", data);
+        setContent('');
+        // await dispatch(getChannelmessagesThunk(channelId));
+    }
+
+    let messages = null;
+    if(channelmessages && channelmessages.channelmessageList && channelmessages.channelmessageList.length){
+        messages = (channelmessages.channelmessageList.map(e => (
+            <div className="single-message-container">
+                <div className="message-sender-container">{e.User.firstName} {e.User.lastName}</div>
+                <div className="message-content-container">{e.content}</div>
+            </div>
+        )))
+    }else{
+        messages = null;
     }
 
     return (<div>
@@ -84,7 +120,25 @@ function ServerChannels({servers, path, url, user}){
                 <h3>
                     Server {serverId} Channel {channelId}
                 </h3>
-                <button onClick={submitMessage}>test</button>
+
+
+                <div className="messages-container">
+                    {isLoaded && messages}
+                </div>
+                <form className="message-form">
+                <div className='message-form-label'>
+                    <label>
+                    Message:
+                    <input
+                        type="text"
+                        value={content}
+                        onChange={(e) => setContent(e.target.value)}
+                        required
+                    />
+                    </label>
+                </div>
+                <button onClick={submitMessage}>submit</button>
+                </form>
             </div>)
 }
 
