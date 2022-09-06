@@ -32,15 +32,19 @@ function MainPage({sessionLoaded}){
     useEffect(() => {
         dispatch(getServersThunk()).then(() => setIsLoaded(true))
         // if(!isLoaded && !sessionUser) return historys6.push('/');
-    }, [dispatch, servers?.serverList?.length]);
+        socket.on('channelbroadcast', data => {
+            if(sessionUser){
+                console.log(`User ${sessionUser.id} got new message in server ${data.serverId} channel ${data.channelId}`)
+                if(serverId !== data.serverId.toString())setNewServerMessage({...newServerMessage, [data.serverId]:true});
+                if(channelId !== data.channelId.toString())setNewChannelMessage({...newChannelMessage, [data.channelId]:true});
+            }
+        });
 
-    socket.on('channelbroadcast', data => {
-        if(sessionUser){
-            console.log(`User ${sessionUser.id} got new message in server ${data.serverId} channel ${data.channelId}`)
-            if(serverId !== data.serverId.toString())setNewServerMessage({...newServerMessage, [data.serverId]:true});
-            if(channelId !== data.channelId.toString())setNewChannelMessage({...newChannelMessage, [data.channelId]:true});
+        return () => {
+            socket.removeAllListeners();
         }
-    });
+    }, [dispatch, servers?.serverList?.length, sessionUser]);
+
 
 
     if(sessionLoaded && !sessionUser) return history.push('/');
@@ -96,21 +100,26 @@ function ServerChannels({servers, path, url, user, newServerMessage, newChannelM
     // if(channelId !== 'none')setNewChannelMessage({...newChannelMessage, [channelId]:false});
 
     useEffect(() => {
+        setContent('');
         dispatch(getChannelmessagesThunk(channelId)).then(() => setIsLoaded(true))
         // if(!isLoaded && !sessionUser) return history.push('/');
         // console.log(channelmessages)
+        socket.on('channelbroadcast', data => {
+            console.log(data);
+            if(data.serverId.toString() === serverId){
+                if(data.channelId.toString() === channelId){
+                    dispatch(getChannelmessagesThunk(channelId));
+                }
+            }
+        });
+
+        return () => {
+            socket.removeAllListeners();
+        }
 
     }, [dispatch, channelId]);
 
     // useEffect(() => {
-    socket.on('channelbroadcast', data => {
-        console.log(data);
-        if(data.serverId.toString() === serverId){
-            if(data.channelId.toString() === channelId){
-                dispatch(getChannelmessagesThunk(channelId));
-            }
-        }
-    });
     // },[socket])//useEffect+socket => infinate rerendering?
 
     // const connectToChannel = () => {
@@ -159,18 +168,18 @@ function ServerChannels({servers, path, url, user, newServerMessage, newChannelM
                     {isLoaded && messages}
                 </div>
                 <form className="message-form">
-                <div className='message-form-label'>
-                    <label>
-                    Message:
-                    <input
-                        type="text"
-                        value={content}
-                        onChange={(e) => setContent(e.target.value)}
-                        required
-                    />
-                    </label>
-                </div>
-                <button onClick={submitMessage}>submit</button>
+                    <div className='message-form-label'>
+                        <label>
+                        Message:
+                        <input
+                            type="text"
+                            value={content}
+                            onChange={(e) => setContent(e.target.value)}
+                            required
+                        />
+                        </label>
+                    </div>
+                    <button onClick={submitMessage}>submit</button>
                 </form>
             </div>)
 }
