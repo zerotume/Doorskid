@@ -5,7 +5,7 @@ import { Link, BrowserRouter as Router, useHistory, Switch, Route, useParams, us
 import { getServersThunk } from "../../store/servers";
 import io from "socket.io-client";
 import { getChannelmessagesThunk } from "../../store/channelmessages";
-const SOCKET_IO_URL = "ws://localhost:3000";
+const SOCKET_IO_URL = process.env.SOCKET_IO_URL || "ws://localhost:3000";
 const socket = io(SOCKET_IO_URL);
 
 
@@ -14,22 +14,38 @@ const socket = io(SOCKET_IO_URL);
 function MainPage({sessionLoaded}){
 
     const history = useHistory();
+
     const dispatch = useDispatch();
     const sessionUser = useSelector(state => state.session.user);
     const servers = useSelector(state => state.servers);
     // const serverList = useSelector(state => state.servers.serverList);
     const [isLoaded, setIsLoaded] = useState(false);
 
+    const [newServerMessage, setNewServerMessage] = useState({});
+    const [newChannelMessage, setNewChannelMessage] = useState({});
+    let {path, url} = useRouteMatch();
+    let realUrl = window.location.href.split('/');
+    let serverId = realUrl[4];
+    let channelId = realUrl[5];
+
+
     useEffect(() => {
         dispatch(getServersThunk()).then(() => setIsLoaded(true))
-        // if(!isLoaded && !sessionUser) return history.push('/');
+        // if(!isLoaded && !sessionUser) return historys6.push('/');
     }, [dispatch, servers?.serverList?.length]);
 
+    socket.on('channelbroadcast', data => {
+        if(sessionUser){
+            console.log(`User ${sessionUser.id} got new message in server ${data.serverId} channel ${data.channelId}`)
+            if(serverId !== data.serverId.toString())setNewServerMessage({...newServerMessage, [data.serverId]:true});
+            if(channelId !== data.channelId.toString())setNewChannelMessage({...newChannelMessage, [data.channelId]:true});
+        }
+    });
 
-    let {path, url} = useRouteMatch();
+
     if(sessionLoaded && !sessionUser) return history.push('/');
     // if(!sessionUser) return history.push('/');
-
+    // let newMessage = {};
     return isLoaded && sessionUser && (
 
         <Router>
@@ -39,9 +55,12 @@ function MainPage({sessionLoaded}){
                         servers.serverList &&
                         servers.serverList.length &&
                         servers.serverList.map(e => (
-                            <Link className="server-item-link"
-                                to={`${url}/${e.id}/${e.Channels.length?e.Channels[0].id:"none"}`} > {e.name} |</Link>
-                            // <button className="server-item-button">{e.name}</button>
+                            <>
+                                <span className="server-item-unread" hidden={!newServerMessage[e.id] || serverId===e.id.toString()}>*</span>
+                                <Link className="server-item-link" onClick={() => setNewServerMessage({...newServerMessage, [serverId]:false})}
+                                    to={`${url}/${e.id}/${e.Channels.length?e.Channels[0].id:"none"}`} > {e.name} |</Link>
+                                {/* // <button className="server-item-button">{e.name}</button> */}
+                            </>
                         ))}
                 </div>
             </div>
@@ -51,15 +70,19 @@ function MainPage({sessionLoaded}){
                     <h3>Click a server to see messages!</h3>
                 </Route>
                 <Route path={`${path}/:serverId/:channelId`}>
-                    <ServerChannels servers={servers} path={path} url={url} user={sessionUser}/>
+                    <ServerChannels servers={servers} path={path} url={url} user={sessionUser}
+                    newServerMessage={newServerMessage} newChannelMessage={newChannelMessage}
+                    setNewServerMessage={setNewServerMessage} setNewChannelMessage={setNewChannelMessage}
+                    />
                 </Route>
             </Switch>
 
         </Router>
     )
 }
-function ServerChannels({servers, path, url, user}){
+function ServerChannels({servers, path, url, user, newServerMessage, newChannelMessage, setNewServerMessage, setNewChannelMessage}){
 
+    // console.log(newChannelMessage);
     const dispatch = useDispatch();
     let {serverId, channelId} = useParams();
     let userId = user.id;
@@ -68,6 +91,9 @@ function ServerChannels({servers, path, url, user}){
     const [content, setContent] = useState('');
     const channelmessages = useSelector(state => state.channelmessages);
     if(channelId !== 'none') channels = servers[serverId].Channels;
+
+    // setNewServerMessage({...newServerMessage, [serverId]:false});
+    // if(channelId !== 'none')setNewChannelMessage({...newChannelMessage, [channelId]:false});
 
     useEffect(() => {
         dispatch(getChannelmessagesThunk(channelId)).then(() => setIsLoaded(true))
@@ -79,7 +105,11 @@ function ServerChannels({servers, path, url, user}){
     useEffect(() => {
         socket.on('channelbroadcast', data => {
             console.log(data);
-            dispatch(getChannelmessagesThunk(channelId));
+            if(data.serverId.toString() === serverId){
+                if(data.channelId.toString() === channelId){
+                    dispatch(getChannelmessagesThunk(channelId));
+                }
+            }
         });
     },[socket])
 
@@ -113,8 +143,11 @@ function ServerChannels({servers, path, url, user}){
     return (<div>
                 {channels.length &&
                     channels.map(c => (
-                        <Link className="channel-item-link"
-                            to={`${url}/${serverId}/${c.id}`} > {c.name} |</Link>
+                        <>
+                            <span className="channel-item-unread" hidden={!newChannelMessage[c.id] || c.id.toString() === channelId}>*</span>
+                            <Link className="channel-item-link" onClick={() => setNewChannelMessage({...newChannelMessage, [channelId]:false})}
+                                to={`${url}/${serverId}/${c.id}`} > {c.name} |</Link>
+                        </>
                     ))
                 }
                 <h3>
