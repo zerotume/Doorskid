@@ -102,16 +102,16 @@ function ServerChannels({servers, path, url, user, newServerMessage, newChannelM
 
     }, [dispatch, channelId]);
 
-    useEffect(() => {
-        socket.on('channelbroadcast', data => {
-            console.log(data);
-            if(data.serverId.toString() === serverId){
-                if(data.channelId.toString() === channelId){
-                    dispatch(getChannelmessagesThunk(channelId));
-                }
+    // useEffect(() => {
+    socket.on('channelbroadcast', data => {
+        console.log(data);
+        if(data.serverId.toString() === serverId){
+            if(data.channelId.toString() === channelId){
+                dispatch(getChannelmessagesThunk(channelId));
             }
-        });
-    },[socket])
+        }
+    });
+    // },[socket])//useEffect+socket => infinate rerendering?
 
     // const connectToChannel = () => {
 

@@ -21,7 +21,7 @@ function ServerForm({server, formType, setShowServerEdit, sessionLoaded}){
         e.preventDefault();
         server = {
             ...server,
-            name:serverName
+            name:serverName,
         };
 
         setErrors([]);
@@ -36,7 +36,7 @@ function ServerForm({server, formType, setShowServerEdit, sessionLoaded}){
 
     }
 
-    return (
+    return sessionLoaded && (
         <div className="server-form-wrapper">
             <form className="doorskid-form server-form" onClick={handleSubmit}>
                 <ul>
