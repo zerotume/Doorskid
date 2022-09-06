@@ -65,15 +65,23 @@ function ServerChannels({servers, path, url, user}){
     let userId = user.id;
     let channels = [];
     const [isLoaded, setIsLoaded] = useState(false);
+    const [content, setContent] = useState('');
     const channelmessages = useSelector(state => state.channelmessages);
     if(channelId !== 'none') channels = servers[serverId].Channels;
 
     useEffect(() => {
         dispatch(getChannelmessagesThunk(channelId)).then(() => setIsLoaded(true))
         // if(!isLoaded && !sessionUser) return history.push('/');
-        console.log(channelmessages)
+        // console.log(channelmessages)
 
     }, [dispatch, channelId]);
+
+    useEffect(() => {
+        socket.on('channelbroadcast', data => {
+            console.log(data);
+            dispatch(getChannelmessagesThunk(channelId));
+        });
+    },[socket])
 
     // const connectToChannel = () => {
 
@@ -81,11 +89,13 @@ function ServerChannels({servers, path, url, user}){
 
     socket.emit("join", userId);
 
-    const submitMessage = e => {
+    const submitMessage = async e => {
         e.preventDefault();
         const d = new Date();
-        const data = {serverId, channelId, content:"test", userId, sendTime:d.getTime()};
-        socket.emit("channelMessage", data);
+        const data = {serverId, channelId, content, userId, sendTime:d.getTime()};
+        socket.emit("channelmessage", data);
+        setContent('');
+        // await dispatch(getChannelmessagesThunk(channelId));
     }
 
     let messages = null;
@@ -115,7 +125,20 @@ function ServerChannels({servers, path, url, user}){
                 <div className="messages-container">
                     {isLoaded && messages}
                 </div>
-                <button onClick={submitMessage}>test</button>
+                <form className="message-form">
+                <div className='message-form-label'>
+                    <label>
+                    Message:
+                    <input
+                        type="text"
+                        value={content}
+                        onChange={(e) => setContent(e.target.value)}
+                        required
+                    />
+                    </label>
+                </div>
+                <button onClick={submitMessage}>submit</button>
+                </form>
             </div>)
 }
 

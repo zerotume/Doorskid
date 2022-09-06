@@ -6,7 +6,7 @@ const { port } = require('../config');
 
 const app = require('../app');
 const db = require('../db/models');
-const {User} = require('../db/models');
+const {User, Channelmessage} = require('../db/models');
 const http = require('http');
 
 const server = http.createServer(app);
@@ -26,12 +26,19 @@ io.on("connection", socket => {
     // }
   });
 
-  socket.on("channelMessage",
+  socket.on("channelmessage",
           async ({serverId, channelId, content, userId, sendTime}) => {
     const d = new Date();
     receiveTime = d.getTime()
     console.log({serverId, channelId, content, userId});
     console.log("Delayed ", (receiveTime - sendTime)/60000);
+    let newMessage = await Channelmessage.create({
+      channelId,
+      senderId:userId,
+      content
+    });
+    newMessage = newMessage.toJSON();
+    io.in(channelId.toString()).emit('channelbroadcast', newMessage);
   });
 })
 
