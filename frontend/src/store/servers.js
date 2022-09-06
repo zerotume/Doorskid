@@ -62,14 +62,15 @@ export const createServerThunk = payload => async dispatch => {
 export const editServerThunk = server => async dispatch => {
     const response = await csrfFetch(`/api/servers/${server.id}`, {
         method: 'PUT',
-    body: JSON.stringify(server),
-    headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(server),
+        headers: {'Content-Type': 'application/json'},
     });
 
     if (response.ok) {
         const server = await response.json();
         dispatch(editServerAction(server));
-        return null
+        // console.log("wat?");
+        return null;
     }else{
         const data = await response.json();
         return  data.errors;
@@ -84,7 +85,7 @@ export const deleteServerThunk = id => async dispatch => {
     if (response.ok){
         const deleted = await response.json();
         dispatch(deleteServerAction(id));
-        return deleted;
+        return null;
     } else {
         const data = await response.json();
         return data.errors;

@@ -2,9 +2,10 @@ import { useState } from "react";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, BrowserRouter as Router, useHistory, Switch, Route, useParams, useRouteMatch } from "react-router-dom";
-import { getServersThunk } from "../../store/servers";
+import { deleteServerThunk, getServersThunk } from "../../store/servers";
 import io from "socket.io-client";
 import { getChannelmessagesThunk } from "../../store/channelmessages";
+import ServerForm from "../ServerForm/ServerForm";
 const SOCKET_IO_URL = process.env.SOCKET_IO_URL || "ws://localhost:3000";
 const socket = io(SOCKET_IO_URL);
 
@@ -23,6 +24,9 @@ function MainPage({sessionLoaded}){
 
     const [newServerMessage, setNewServerMessage] = useState({});
     const [newChannelMessage, setNewChannelMessage] = useState({});
+    const [showServerEdit, setShowServerEdit] = useState(-1);
+    const [showServerCreate, setShowServerCreate] = useState(false);
+
     let {path, url} = useRouteMatch();
     let realUrl = window.location.href.split('/');
     let serverId = realUrl[4];
@@ -45,7 +49,16 @@ function MainPage({sessionLoaded}){
         }
     }, [dispatch, servers?.serverList?.length, sessionUser]);
 
-
+    const deleteClick = id => async e => {
+        e.preventDefault();
+        const data = await dispatch(deleteServerThunk(id));
+        if(data){
+            //todo: error handling
+        }else{
+            dispatch(getServersThunk());
+            history.push('/main');
+        }
+    }
 
     if(sessionLoaded && !sessionUser) return history.push('/');
     // if(!sessionUser) return history.push('/');
@@ -55,6 +68,13 @@ function MainPage({sessionLoaded}){
         <Router>
             <div className="main-page-container">
                 <div className="server-list">
+                <div className="server-new-container">
+                    {/* <button className="server-new-button" onClick={setShowServerCreate(true)}>New Server</button> */}
+                    {/* <div className="create-server-show" hidden={showServerCreate}> */}
+                                    <ServerForm formType={"Create Server"} server={{ownerId:sessionUser.id}} setShowServerCreate={setShowServerCreate} sessionLoaded={sessionLoaded} />
+                                    <button className="close-server-form-button" onClick={() => setShowServerCreate(false)}>Cancel</button>
+                                {/* </div> */}
+                </div>
                     {servers &&
                         servers.serverList &&
                         servers.serverList.length &&
@@ -62,7 +82,13 @@ function MainPage({sessionLoaded}){
                             <>
                                 <span className="server-item-unread" hidden={!newServerMessage[e.id] || serverId===e.id.toString()}>*</span>
                                 <Link className="server-item-link" onClick={() => setNewServerMessage({...newServerMessage, [serverId]:false})}
-                                    to={`${url}/${e.id}/${e.Channels.length?e.Channels[0].id:"none"}`} > {e.name} |</Link>
+                                    to={`${url}/${e.id}/${e.Channels?.length?e.Channels[0].id:"none"}`} > {e.name} |</Link>
+                                <button onClick={() => setShowServerEdit(e.id)} disabled={e.ownerId !== sessionUser.id}>Edit</button>
+                                <button className='td-delete-button' onClick={deleteClick(e.id)} disabled={e.ownerId !== sessionUser.id}>Delete</button>
+                                <div className="update-server-show" hidden={e.id!==showServerEdit}>
+                                    <ServerForm formType={"Edit Server"} server={e} setShowServerEdit={setShowServerEdit} sessionLoaded={sessionLoaded} />
+                                    <button className="close-server-form-button" onClick={() => setShowServerEdit(-1)}>Cancel</button>
+                                </div>
                                 {/* // <button className="server-item-button">{e.name}</button> */}
                             </>
                         ))}
@@ -150,7 +176,7 @@ function ServerChannels({servers, path, url, user, newServerMessage, newChannelM
     }
 
     return (<div>
-                {channels.length &&
+                {channels?.length &&
                     channels.map(c => (
                         <>
                             <span className="channel-item-unread" hidden={!newChannelMessage[c.id] || c.id.toString() === channelId}>*</span>
