@@ -38,7 +38,7 @@ io.on("connection", socket => {
       content
     });
     newMessage = newMessage.toJSON();
-    io.in(channelId.toString()).emit('channelbroadcast', newMessage);
+    io.to(serverId.toString()).emit('channelbroadcast', {newMessage, serverId, channelId});
   });
 })
 
