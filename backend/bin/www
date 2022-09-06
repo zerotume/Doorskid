@@ -6,19 +6,33 @@ const { port } = require('../config');
 
 const app = require('../app');
 const db = require('../db/models');
+const {User} = require('../db/models');
 const http = require('http');
 
 const server = http.createServer(app);
 const io = require("socket.io")(server);
+
 io.on("connection", socket => {
+  socket.on("join", async (userId) => {
+    const currentUser = await User.findByPk(userId);
+    let servers = await currentUser.getServers();
+    servers.forEach(s => {
+      let server = s.toJSON();
+      socket.join(server.id.toString());
+    });
+    // console.log(serverArray);
+    // for(ele of serverArray){
+    //   socket.join(ele.id.toString);
+    // }
+  });
+
   socket.on("channelMessage",
           async ({serverId, channelId, content, userId, sendTime}) => {
     const d = new Date();
     receiveTime = d.getTime()
     console.log({serverId, channelId, content, userId});
     console.log("Delayed ", (receiveTime - sendTime)/60000);
-
-  })
+  });
 })
 
 

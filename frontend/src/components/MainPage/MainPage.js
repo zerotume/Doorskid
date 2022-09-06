@@ -67,6 +67,9 @@ function ServerChannels({servers, path, url, user}){
     // const connectToChannel = () => {
 
     // }
+
+    socket.emit("join", userId);
+
     const submitMessage = e => {
         e.preventDefault();
         const d = new Date();
@@ -84,6 +87,9 @@ function ServerChannels({servers, path, url, user}){
                 <h3>
                     Server {serverId} Channel {channelId}
                 </h3>
+                <div className="message-container">
+
+                </div>
                 <button onClick={submitMessage}>test</button>
             </div>)
 }
