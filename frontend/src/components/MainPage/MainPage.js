@@ -152,7 +152,7 @@ function ServerChannels({servers, path, url, user, newServerMessage, newChannelM
             socket.removeAllListeners();
         }
 
-    }, [dispatch, serverId, channelId, url]);
+    }, [dispatch, serverId, channelId, url, channels?.length, content, showChannelCreate]);
 
     if(!serverId){
         history.replace('/main');
@@ -195,9 +195,11 @@ function ServerChannels({servers, path, url, user, newServerMessage, newChannelM
         if(data){
             //todo: error handling
         }else{
+            console.log('here!');
             dispatch(getServersThunk());
             // return <Redirect to="/main" />
             history.replace(`/main/${serverId}`);
+            setContent('');
             setShowChannelCreate(false);
         }
     }
@@ -210,7 +212,7 @@ function ServerChannels({servers, path, url, user, newServerMessage, newChannelM
                         <button className="close-channel-form-button" onClick={() => setShowChannelCreate(false)}>Cancel</button>
                     </div>
                 </div>
-                {serverId && channelId && channels?.length &&
+                {channels?.length &&
                     channels.map(c => (
                         <>
                             <span className="channel-item-unread" hidden={!newChannelMessage[c.id] || c.id.toString() === channelId}>*</span>
