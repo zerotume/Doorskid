@@ -1,6 +1,6 @@
 import { useSelector } from "react-redux";
 import { Link, useHistory } from "react-router-dom";
-
+import './SplashPage.css';
 
 
 function SplashPage(){
@@ -25,7 +25,29 @@ function SplashPage(){
         <div className="splash-container">
             <div className="splash-header">
                 <div className="splash-header-icon">Doorskid</div>
-                <div className="splash-header-middle">  None  Of  These  Is  A  Live  Link  </div>
+                <div className="splash-header-middle">
+                     <span>
+                        None
+                    </span>
+                     <span>
+                        Of
+                    </span>
+                     <span>
+                        These
+                    </span>
+                     <span>
+                        Is
+                    </span>
+                     <span>
+                        A
+                    </span>
+                     <span>
+                        Live
+                    </span>
+                     <span>
+                        Link
+                    </span>
+                </div>
                 <div className="splash-header-right">
                     <button className="splash-header-login splash-header-button" onClick={toLogin}>Login</button>
                 </div>

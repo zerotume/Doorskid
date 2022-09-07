@@ -35,7 +35,7 @@ function ServerForm({server, formType, setShowServerEdit, setShowServerCreate, s
             if(formType==="Edit Server")setShowServerEdit(-1);
             if(formType==="Create Server")setShowServerCreate(false);
             dispatch(getServersThunk());
-            history.push(`/main/${data.id}/${server.Channels?.length?server.Channels[0].id:"none"}`);
+            dispatch(getServersThunk()).then(() => history.replace(`/main`));
         }
     }
 

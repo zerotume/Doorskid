@@ -2,10 +2,10 @@ const { useState } = require("react");
 const { useDispatch, useSelector } = require("react-redux");
 const { useHistory } = require("react-router-dom");
 const { editChannelThunk, createChannelThunk } = require("../../store/channels");
-const { createServerThunk } = require("../../store/servers");
+const { createServerThunk, getServersThunk } = require("../../store/servers");
 
 
-function ChannelForm({channel, formType, setShowChannelEdit, sessionLoaded}){
+function ChannelForm({channel, formType, setShowChannelEdit, sessionLoaded,setShowChannelCreate}){
     const dispatch = useDispatch();
     const user = useSelector(state => state.session.user);
     const [channelName, setChannelName] = useState(channel.name || '')
@@ -31,8 +31,10 @@ function ChannelForm({channel, formType, setShowChannelEdit, sessionLoaded}){
             //todo: error handling
         }else{
             if(formType === "Edit Channel")setShowChannelEdit(-1);
+            if(formType === "Create Channel")setShowChannelCreate(false);
             setChannelName('');
-            history.replace(`/main/${channel.serverId}/${data.id}`);
+            dispatch(getServersThunk()).then(() => history.replace(`/main`));
+
         }
     }
 
