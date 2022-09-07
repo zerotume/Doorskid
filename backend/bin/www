@@ -42,11 +42,21 @@ io.on("connection", socket => {
   });
 
   socket.on("deleteChannelmessage", async ({msgId, serverId, channelId}) => {
-    console.log("?");
+    // console.log({msgId, serverId, channelId});
     let message = await Channelmessage.findByPk(msgId);
     await message.destroy();
-    io.to(serverId.toString()).emit('channelbroadcast', serverId, channelId)
+    io.to(serverId.toString()).emit('channelbroadcast', {serverId, channelId})
   });
+
+  socket.on("updateChannelmessage", async ({channelmessage, serverId, channelId}) => {
+    let message = await Channelmessage.findByPk(channelmessage.id);
+    message.set({
+      content:channelmessage.content
+    });
+    await message.save();
+    io.to(serverId.toString()).emit('channelbroadcast', {serverId, channelId})
+  });
+
 })
 
 

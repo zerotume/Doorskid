@@ -10,6 +10,7 @@ import ServerForm from "../ServerForm/ServerForm";
 import ChannelForm from "../ChannelForm/ChannelForm";
 import { deleteChannelThunk } from "../../store/channels";
 import "./MainPage.css";
+import ChannelmessageForm from "../ChannelmessageForm/ChannelmessageForm";
 const SOCKET_IO_URL = process.env.SOCKET_IO_URL || "ws://localhost:3000";
 const socket = io(SOCKET_IO_URL);
 
@@ -133,6 +134,7 @@ function ServerChannels({servers, path, url, user, newServerMessage, newChannelM
     const [isLoaded, setIsLoaded] = useState(false);
     const [content, setContent] = useState('');
     const [showChannelEdit, setShowChannelEdit] = useState(-1);
+    const [showChannelmessageEdit, setShowChannelmessageEdit] = useState(-1);
     const [showChannelCreate, setShowChannelCreate] = useState(false);
 //maybe channelmessages to empty after every click?
     const channelmessages = useSelector(state => state.channelmessages);
@@ -189,12 +191,11 @@ function ServerChannels({servers, path, url, user, newServerMessage, newChannelM
         // await dispatch(getChannelmessagesThunk(channelId));
     }
 
-    const editMessage = id => async e => {
+    // const editMessage = id => async e => {
 
-    }
+    // }
 
     const deleteMessage = id => async e => {
-
         e.preventDefault();
         const data = {msgId:id, serverId, channelId};
         socket.emit("deleteChannelmessage", data);
@@ -211,8 +212,15 @@ function ServerChannels({servers, path, url, user, newServerMessage, newChannelM
                     <div className="message-content-container">{e.content}</div>
                 </div>
                 <div className="message-button-container">
-                    <button className="message-button message-edit-button" onClick={editMessage(e.id)} disabled={e.senderId.toString() !== userId.toString()} hidden={e.senderId.toString() !== userId.toString()}>Edit</button>
+                    <button className="message-button message-edit-button" onClick={() => setShowChannelmessageEdit(e.id)} disabled={e.senderId.toString() !== userId.toString()} hidden={e.senderId.toString() !== userId.toString()}>Edit</button>
                     <button className="message-button message-delete-button" onClick={deleteMessage(e.id)} disabled={e.senderId.toString() !== userId.toString()} hidden={e.senderId.toString() !== userId.toString()}>Delete</button>
+                </div>
+                <div className="update-message-show" hidden={e.id!==showChannelmessageEdit}>
+                    <ChannelmessageForm channelmessage={e}
+                            setShowChannelmessageEdit={setShowChannelmessageEdit}
+                            sessionLoaded={sessionLoaded} socket={socket}
+                            serverId={serverId} channelId={channelId}/>
+                    <button className="close-server-form-button" onClick={() => setShowChannelmessageEdit(-1)}>Cancel</button>
                 </div>
             </div>
         )))
