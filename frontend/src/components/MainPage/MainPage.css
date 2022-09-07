@@ -20,6 +20,7 @@
     margin-left:1.5rem;
     display: flex;
     flex-direction: column;
+    height: 100%;
 }
 
 .channel-list-container{
@@ -97,6 +98,27 @@
     padding-top:1rem;
 }
 
-/* html{
+html{
     background-color: #36393f;
-} */
+}
+
+.channel-item-link[disabled]{
+    cursor: not-allowed;
+    pointer-events: none;
+    color: antiquewhite;
+}
+
+.profile-container{
+    /* align-self: center; */
+    margin-top: 300%;
+    position:absolute;
+    margin-left: 2rem;
+
+}
+
+.profile-dropdown{
+    bottom: 3rem;
+    position: fixed;
+    list-style-type:none;
+    margin-left: -2rem;
+}

@@ -36,7 +36,6 @@ function MainPage({sessionLoaded}){
     let serverId = realUrl[4];
     let channelId = realUrl[5];
 
-
     useEffect(() => {
         dispatch(getServersThunk()).then(() => setIsLoaded(true))
         // if(!isLoaded && !sessionUser) return historys6.push('/');
@@ -99,9 +98,9 @@ function MainPage({sessionLoaded}){
                                 {/* // <button className="server-item-button">{e.name}</button> */}
                             </div>
                         ))}
-                    <div className="profile-container">
-                        <ProfileButton user={sessionUser} />
-                    </div>
+                </div>
+                <div className="profile-container">
+                    <ProfileButton user={sessionUser} />
                 </div>
 
             </div>
@@ -135,7 +134,7 @@ function ServerChannels({servers, path, url, user, newServerMessage, newChannelM
     const [content, setContent] = useState('');
     const [showChannelEdit, setShowChannelEdit] = useState(-1);
     const [showChannelCreate, setShowChannelCreate] = useState(false);
-
+//maybe channelmessages to empty after every click?
     const channelmessages = useSelector(state => state.channelmessages);
     if(channelId !== 'none') channels = servers[serverId].Channels;
 
@@ -187,11 +186,11 @@ function ServerChannels({servers, path, url, user, newServerMessage, newChannelM
         // await dispatch(getChannelmessagesThunk(channelId));
     }
 
-    const editMessage = async e => {
+    const editMessage = id => async e => {
 
     }
 
-    const deleteMessage = async e => {
+    const deleteMessage = id => async e => {
 
     }
 
@@ -200,9 +199,14 @@ function ServerChannels({servers, path, url, user, newServerMessage, newChannelM
     if(isLoaded && channelmessages && channelmessages.channelmessageList && channelmessages.channelmessageList.length){
         messages = (channelmessages.channelmessageList.map(e => (
             <div className="single-message-container">
-                <div className=""></div>
-                <div className="message-sender-container">{e.User.firstName} {e.User.lastName}</div>
-                <div className="message-content-container">{e.content}</div>
+                <div className="message-main-container">
+                    <div className="message-sender-container">{e.User.firstName} {e.User.lastName}</div>
+                    <div className="message-content-container">{e.content}</div>
+                </div>
+                <div className="message-button-container">
+                    <button className="message-button message-edit-button" onClick={editMessage(e.id)}>Edit</button>
+                    <button className="message-button message-delete-button" onClick={deleteMessage(e.id)}>Delete</button>
+                </div>
             </div>
         )))
     }else{
@@ -210,7 +214,7 @@ function ServerChannels({servers, path, url, user, newServerMessage, newChannelM
     }
 
 
-    console.log(messages);
+    // console.log(messages);
 
     const deleteClick = id => async e => {
         e.preventDefault();
@@ -243,7 +247,7 @@ function ServerChannels({servers, path, url, user, newServerMessage, newChannelM
                         {channels.map(c => (
                             <div className="channel-item-container">
                                 <span className="channel-item-unread" hidden={!newChannelMessage[c.id] || c.id.toString() === channelId}>*</span>
-                                <Link className="channel-item-link" onClick={channelItemClick}
+                                <Link className="channel-item-link" onClick={channelItemClick} disabled={c.id.toString() === channelId}
                                     to={`${url}/${serverId}/${c.id}`} > {c.name} |</Link>
                                 <button onClick={() => setShowChannelEdit(c.id)} disabled={servers[serverId].ownerId !== user.id} hidden={servers[serverId].ownerId !== user.id}>Edit</button>
                                 <button className='channel-delete-button' onClick={deleteClick(c.id)} disabled={servers[serverId].ownerId !== user.id} hidden={servers[serverId].ownerId !== user.id}>Delete</button>
