@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, BrowserRouter as Router, useHistory, Switch, Route, useParams, useRouteMatch, Redirect } from "react-router-dom";
@@ -137,11 +137,13 @@ function ServerChannels({servers, path, url, user, newServerMessage, newChannelM
 //maybe channelmessages to empty after every click?
     const channelmessages = useSelector(state => state.channelmessages);
     if(channelId !== 'none') channels = servers[serverId].Channels;
+    const messageContainer = useRef(null);
 
     // setNewServerMessage({...newServerMessage, [serverId]:false});
     // if(channelId !== 'none')setNewChannelMessage({...newChannelMessage, [channelId]:false});
 
     useEffect(() => {
+        messageContainer.current.scrollIntoView({behavior:"smooth"});
         console.log("rerendered, serverId", serverId);
         setIsLoaded(false);
         setContent('');
@@ -153,6 +155,7 @@ function ServerChannels({servers, path, url, user, newServerMessage, newChannelM
             if(data.serverId.toString() === serverId){
                 if(data.channelId.toString() === channelId){
                     dispatch(getChannelmessagesThunk(channelId));
+                    messageContainer.current.scrollIntoView({behavior:"smooth"});//doesn't work
                 }
             }
         });
@@ -192,6 +195,10 @@ function ServerChannels({servers, path, url, user, newServerMessage, newChannelM
 
     const deleteMessage = id => async e => {
 
+        e.preventDefault();
+        const data = {msgId:id, serverId, channelId};
+        socket.emit("deleteChannelmessage", data);
+        // setContent('');
     }
 
     // console.log("cms", channelmessages)
@@ -204,8 +211,8 @@ function ServerChannels({servers, path, url, user, newServerMessage, newChannelM
                     <div className="message-content-container">{e.content}</div>
                 </div>
                 <div className="message-button-container">
-                    <button className="message-button message-edit-button" onClick={editMessage(e.id)}>Edit</button>
-                    <button className="message-button message-delete-button" onClick={deleteMessage(e.id)}>Delete</button>
+                    <button className="message-button message-edit-button" onClick={editMessage(e.id)} disabled={e.senderId.toString() !== userId.toString()} hidden={e.senderId.toString() !== userId.toString()}>Edit</button>
+                    <button className="message-button message-delete-button" onClick={deleteMessage(e.id)} disabled={e.senderId.toString() !== userId.toString()} hidden={e.senderId.toString() !== userId.toString()}>Delete</button>
                 </div>
             </div>
         )))
@@ -264,7 +271,7 @@ function ServerChannels({servers, path, url, user, newServerMessage, newChannelM
                             Server {serverId} Channel {channelId}
                         </h3>
                     </div>
-                    <div className="messages-container">
+                    <div className="messages-container" ref={messageContainer}>
                         {isLoaded && messages}
                     </div>
                     <div className="message-form-container">

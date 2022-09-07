@@ -40,6 +40,13 @@ io.on("connection", socket => {
     newMessage = newMessage.toJSON();
     io.to(serverId.toString()).emit('channelbroadcast', {newMessage, serverId, channelId});
   });
+
+  socket.on("deleteChannelmessage", async ({msgId, serverId, channelId}) => {
+    console.log("?");
+    let message = await Channelmessage.findByPk(msgId);
+    await message.destroy();
+    io.to(serverId.toString()).emit('channelbroadcast', serverId, channelId)
+  });
 })
 
 
