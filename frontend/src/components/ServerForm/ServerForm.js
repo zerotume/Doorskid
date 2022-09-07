@@ -27,14 +27,15 @@ function ServerForm({server, formType, setShowServerEdit, setShowServerCreate, s
         setServerName("");
         let data = await dispatch(actions[formType](server));
         // console.log("wat?");
-        if(data){
+        if(data.errors){
             // console.log("nani?")
             //todo: error handleing
         }else{
             // console.log("here!")
             if(formType==="Edit Server")setShowServerEdit(-1);
+            if(formType==="Create Server")setShowServerCreate(false);
             dispatch(getServersThunk());
-            history.push(`/main/${server.id}/${server.Channels?.length?server.Channels[0].id:"none"}`);
+            history.push(`/main/${data.id}/${server.Channels?.length?server.Channels[0].id:"none"}`);
         }
     }
 

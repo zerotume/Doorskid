@@ -1,11 +1,13 @@
 import { useState } from "react";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, BrowserRouter as Router, useHistory, Switch, Route, useParams, useRouteMatch } from "react-router-dom";
+import { Link, BrowserRouter as Router, useHistory, Switch, Route, useParams, useRouteMatch, Redirect } from "react-router-dom";
 import { deleteServerThunk, getServersThunk } from "../../store/servers";
 import io from "socket.io-client";
 import { getChannelmessagesThunk } from "../../store/channelmessages";
 import ServerForm from "../ServerForm/ServerForm";
+import ChannelForm from "../ChannelForm/ChannelForm";
+import { deleteChannelThunk } from "../../store/channels";
 const SOCKET_IO_URL = process.env.SOCKET_IO_URL || "ws://localhost:3000";
 const socket = io(SOCKET_IO_URL);
 
@@ -47,7 +49,7 @@ function MainPage({sessionLoaded}){
         return () => {
             socket.removeAllListeners();
         }
-    }, [dispatch, servers?.serverList?.length, sessionUser]);
+    }, [dispatch, servers?.serverList?.length, sessionUser, serverId, channelId]);
 
     const deleteClick = id => async e => {
         e.preventDefault();
@@ -56,7 +58,9 @@ function MainPage({sessionLoaded}){
             //todo: error handling
         }else{
             dispatch(getServersThunk());
-            history.push('/main');
+            // return <Redirect to="/main" />
+            history.replace('/main');
+            setShowServerCreate(false);
         }
     }
 
@@ -69,11 +73,11 @@ function MainPage({sessionLoaded}){
             <div className="main-page-container">
                 <div className="server-list">
                 <div className="server-new-container">
-                    {/* <button className="server-new-button" onClick={setShowServerCreate(true)}>New Server</button> */}
-                    {/* <div className="create-server-show" hidden={showServerCreate}> */}
-                                    <ServerForm formType={"Create Server"} server={{ownerId:sessionUser.id}} setShowServerCreate={setShowServerCreate} sessionLoaded={sessionLoaded} />
-                                    <button className="close-server-form-button" onClick={() => setShowServerCreate(false)}>Cancel</button>
-                                {/* </div> */}
+                    <button className="server-new-button" onClick={() => setShowServerCreate(true)}>New Server</button>
+                    <div className="create-server-show" hidden={!showServerCreate}>
+                        <ServerForm formType={"Create Server"} server={{ownerId:sessionUser.id}} setShowServerCreate={setShowServerCreate} sessionLoaded={sessionLoaded} />
+                        <button className="close-server-form-button" onClick={() => setShowServerCreate(false)}>Cancel</button>
+                    </div>
                 </div>
                     {servers &&
                         servers.serverList &&
@@ -83,8 +87,8 @@ function MainPage({sessionLoaded}){
                                 <span className="server-item-unread" hidden={!newServerMessage[e.id] || serverId===e.id.toString()}>*</span>
                                 <Link className="server-item-link" onClick={() => setNewServerMessage({...newServerMessage, [serverId]:false})}
                                     to={`${url}/${e.id}/${e.Channels?.length?e.Channels[0].id:"none"}`} > {e.name} |</Link>
-                                <button onClick={() => setShowServerEdit(e.id)} disabled={e.ownerId !== sessionUser.id}>Edit</button>
-                                <button className='td-delete-button' onClick={deleteClick(e.id)} disabled={e.ownerId !== sessionUser.id}>Delete</button>
+                                <button onClick={() => setShowServerEdit(e.id)} disabled={e.ownerId !== sessionUser.id} hidden={e.ownerId !== sessionUser.id}>Edit</button>
+                                <button className='server-delete-button' onClick={deleteClick(e.id)} disabled={e.ownerId !== sessionUser.id} hidden={e.ownerId !== sessionUser.id}>Delete</button>
                                 <div className="update-server-show" hidden={e.id!==showServerEdit}>
                                     <ServerForm formType={"Edit Server"} server={e} setShowServerEdit={setShowServerEdit} sessionLoaded={sessionLoaded} />
                                     <button className="close-server-form-button" onClick={() => setShowServerEdit(-1)}>Cancel</button>
@@ -100,7 +104,7 @@ function MainPage({sessionLoaded}){
                     <h3>Click a server to see messages!</h3>
                 </Route>
                 <Route path={`${path}/:serverId/:channelId`}>
-                    <ServerChannels servers={servers} path={path} url={url} user={sessionUser}
+                    <ServerChannels servers={servers} path={path} url={url} user={sessionUser} sessionLoaded={sessionLoaded}
                     newServerMessage={newServerMessage} newChannelMessage={newChannelMessage}
                     setNewServerMessage={setNewServerMessage} setNewChannelMessage={setNewChannelMessage}
                     />
@@ -110,15 +114,19 @@ function MainPage({sessionLoaded}){
         </Router>
     )
 }
-function ServerChannels({servers, path, url, user, newServerMessage, newChannelMessage, setNewServerMessage, setNewChannelMessage}){
+function ServerChannels({servers, path, url, user, newServerMessage, newChannelMessage, setNewServerMessage, setNewChannelMessage, sessionLoaded}){
 
     // console.log(newChannelMessage);
+    const history = useHistory();
     const dispatch = useDispatch();
     let {serverId, channelId} = useParams();
     let userId = user.id;
     let channels = [];
     const [isLoaded, setIsLoaded] = useState(false);
     const [content, setContent] = useState('');
+    const [showChannelEdit, setShowChannelEdit] = useState(-1);
+    const [showChannelCreate, setShowChannelCreate] = useState(false);
+
     const channelmessages = useSelector(state => state.channelmessages);
     if(channelId !== 'none') channels = servers[serverId].Channels;
 
@@ -126,6 +134,7 @@ function ServerChannels({servers, path, url, user, newServerMessage, newChannelM
     // if(channelId !== 'none')setNewChannelMessage({...newChannelMessage, [channelId]:false});
 
     useEffect(() => {
+        console.log("rerendered, serverId", serverId);
         setContent('');
         dispatch(getChannelmessagesThunk(channelId)).then(() => setIsLoaded(true))
         // if(!isLoaded && !sessionUser) return history.push('/');
@@ -143,7 +152,12 @@ function ServerChannels({servers, path, url, user, newServerMessage, newChannelM
             socket.removeAllListeners();
         }
 
-    }, [dispatch, channelId]);
+    }, [dispatch, serverId, channelId, url]);
+
+    if(!serverId){
+        history.replace('/main');
+        setContent('')
+    }
 
     // useEffect(() => {
     // },[socket])//useEffect+socket => infinate rerendering?
@@ -175,13 +189,39 @@ function ServerChannels({servers, path, url, user, newServerMessage, newChannelM
         messages = null;
     }
 
-    return (<div>
-                {channels?.length &&
+    const deleteClick = id => async e => {
+        e.preventDefault();
+        const data = await dispatch(deleteChannelThunk(id));
+        if(data){
+            //todo: error handling
+        }else{
+            dispatch(getServersThunk());
+            // return <Redirect to="/main" />
+            history.replace(`/main/${serverId}`);
+            setShowChannelCreate(false);
+        }
+    }
+
+    return (<div className="channel-list-container">
+                <div className="channel-new-container">
+                    <button className="channel-new-button" onClick={() => setShowChannelCreate(true)}>New Channel</button>
+                    <div className="create-channel-show" hidden={!showChannelCreate}>
+                        <ChannelForm formType={"Create Channel"} channel={{serverId:serverId}} setShowChannelCreate={setShowChannelCreate} sessionLoaded={sessionLoaded} />
+                        <button className="close-channel-form-button" onClick={() => setShowChannelCreate(false)}>Cancel</button>
+                    </div>
+                </div>
+                {serverId && channelId && channels?.length &&
                     channels.map(c => (
                         <>
                             <span className="channel-item-unread" hidden={!newChannelMessage[c.id] || c.id.toString() === channelId}>*</span>
                             <Link className="channel-item-link" onClick={() => setNewChannelMessage({...newChannelMessage, [channelId]:false})}
                                 to={`${url}/${serverId}/${c.id}`} > {c.name} |</Link>
+                            <button onClick={() => setShowChannelEdit(c.id)} disabled={servers[serverId].ownerId !== user.id} hidden={servers[serverId].ownerId !== user.id}>Edit</button>
+                            <button className='channel-delete-button' onClick={deleteClick(c.id)} disabled={servers[serverId].ownerId !== user.id} hidden={servers[serverId].ownerId !== user.id}>Delete</button>
+                            <div className="update-channel-show" hidden={c.id!==showChannelEdit}>
+                                <ChannelForm formType={"Edit Channel"} channel={c} setShowChannelEdit={setShowChannelEdit} sessionLoaded={sessionLoaded} />
+                                <button className="close-server-form-button" onClick={() => setShowChannelEdit(-1)}>Cancel</button>
+                            </div>
                         </>
                     ))
                 }
@@ -199,13 +239,14 @@ function ServerChannels({servers, path, url, user, newServerMessage, newChannelM
                         Message:
                         <input
                             type="text"
+                            disabled={channelId === 'none'}
                             value={content}
                             onChange={(e) => setContent(e.target.value)}
                             required
                         />
                         </label>
                     </div>
-                    <button onClick={submitMessage}>submit</button>
+                    <button onClick={submitMessage} disabled={channelId === 'none'}>submit</button>
                 </form>
             </div>)
 }

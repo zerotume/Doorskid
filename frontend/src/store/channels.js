@@ -42,8 +42,8 @@ export const getChannelsThunk = serverId => async dispatch => {
     }
 }
 
-export const createChannelThunk = (serverId,payload) => async dispatch => {
-    const response = await csrfFetch(`/api/servers/${serverId}/channels`, {
+export const createChannelThunk = (payload) => async dispatch => {
+    const response = await csrfFetch(`/api/servers/${payload.serverId}/channels`, {
         method: 'POST',
         body: JSON.stringify(payload),
         headers: { 'Content-Type': 'application/json' },
@@ -52,10 +52,10 @@ export const createChannelThunk = (serverId,payload) => async dispatch => {
     if (response.ok) {
         const newChannel = await response.json();
         dispatch(createChannelAction(newChannel));
-        return null;
+        return newChannel;
     }else{
         const data = await response.json();
-        return data.errors;
+        return data;
     }
 }
 

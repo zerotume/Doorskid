@@ -24,14 +24,15 @@ function ChannelForm({channel, formType, setShowChannelEdit, sessionLoaded}){
             name:channelName
         };
 
+        let data = await dispatch(actions[formType](channel));
         setErrors([]);
 
-        let data = await dispatch(actions[formType](channel));
-        if(data){
+        if(data.errors){
             //todo: error handling
         }else{
             if(formType === "Edit Channel")setShowChannelEdit(-1);
-            history.push(`/main/${channel.serverId}/${channel.id}`);
+            setChannelName('');
+            history.replace(`/main/${channel.serverId}/${data.id}`);
         }
     }
 

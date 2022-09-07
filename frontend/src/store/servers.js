@@ -52,10 +52,10 @@ export const createServerThunk = payload => async dispatch => {
     if (response.ok) {
         const newServer = await response.json();
         dispatch(createServerAction(newServer));
-        return null;
+        return newServer;
     }else{
         const data = await response.json();
-        return data.errors;
+        return data;
     }
 }
 
