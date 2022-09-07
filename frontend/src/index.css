@@ -1,1 +1,9 @@
 /* TODO Add site wide styles */
+:root {
+    --font-primary: "Whitney","Helvetica Neue","Helvetica","Arial",sans-serif;
+    --font-display: "Ginto Normal","Whitney","Helvetica Neue","Helvetica","Arial",sans-serif;
+    --font-headline: "Ginto Nord","Whitney","Helvetica Neue","Helvetica","Arial",sans-serif;
+    --font-monospace: "Menlo","Consolas","Monaco",monospace;
+    --font-glitch: "ArchivoBlack","Whitney","Helvetica Neue","Helvetica","Arial",sans-serif;
+    --font-cursive: "Reenie Beanie","Comic Sans MS",cursive,sans-serif;
+}

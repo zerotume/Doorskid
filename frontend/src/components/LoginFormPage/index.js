@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import * as sessionActions from '../../store/session';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, Redirect, useHistory } from 'react-router-dom';
+import "./LoginFormPage.css"
 
 function LoginFormPage() {
   const dispatch = useDispatch();
@@ -37,31 +38,31 @@ function LoginFormPage() {
           <div className='login-form-label login-credential'>
             <label>
               Credential: (Username or Email)
+            </label>
               <input
                 type="text"
                 value={credential}
                 onChange={(e) => setCredential(e.target.value)}
                 required
               />
-            </label>
           </div>
           <div className='login-form-label login-password'>
             <label>
               Password:
+            </label>
               <input
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
               />
-            </label>
           </div>
           <button className='login-submit' type="submit">Log In</button>
         </form>
-      </div>
-      <div className='login-to-register lo-re-div'>
-        <span className='login-to-register-text lore-text'>Need an account?</span>
-        <Link className='login-to-register-link lore-link' to="/signup">Register</Link>
+        <div className='login-to-register lo-re-div'>
+          <span className='login-to-register-text lore-text'>Need an account?</span>
+          <Link className='login-to-register-link lore-link' to="/signup">Register</Link>
+        </div>
       </div>
     </div>
   );

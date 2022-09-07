@@ -1,11 +1,11 @@
-import { createServerThunk, editServerThunk } from "../../store/servers";
+import { createServerThunk, editServerThunk, getServersThunk } from "../../store/servers";
 
 const { useState } = require("react");
 const { useDispatch, useSelector } = require("react-redux");
 const { useHistory } = require("react-router-dom");
 
 
-function ServerForm({server, formType, setShowServerEdit, sessionLoaded}){
+function ServerForm({server, formType, setShowServerEdit, setShowServerCreate, sessionLoaded}){
     const dispatch = useDispatch();
     const user = useSelector(state => state.session.user);
     const [serverName, setServerName] = useState(server.name || '');
@@ -23,22 +23,25 @@ function ServerForm({server, formType, setShowServerEdit, sessionLoaded}){
             ...server,
             name:serverName,
         };
-
         setErrors([]);
-
+        setServerName("");
         let data = await dispatch(actions[formType](server));
-        if(data){
+        // console.log("wat?");
+        if(data.errors){
+            // console.log("nani?")
             //todo: error handleing
         }else{
+            // console.log("here!")
             if(formType==="Edit Server")setShowServerEdit(-1);
-            history.push(`/main/${server.id}/none`);
+            if(formType==="Create Server")setShowServerCreate(false);
+            dispatch(getServersThunk());
+            dispatch(getServersThunk()).then(() => history.replace(`/main`));
         }
-
     }
 
     return sessionLoaded && (
         <div className="server-form-wrapper">
-            <form className="doorskid-form server-form" onClick={handleSubmit}>
+            <form className="doorskid-form server-form" onSubmit={handleSubmit}>
                 <ul>
                     {errors.map((error, idx) => <li key={idx}>{error}</li>)}
                 </ul>
@@ -59,7 +62,6 @@ function ServerForm({server, formType, setShowServerEdit, sessionLoaded}){
             </form>
         </div>
     )
-
 }
 
 export default ServerForm;
