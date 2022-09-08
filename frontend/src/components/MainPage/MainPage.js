@@ -274,7 +274,7 @@ function ServerChannels({servers, path, url, user, newServerMessage, newChannelM
     }
 
     return (<div className="channel-list-container">
-                {!!channels?.length && (<div className="channel-list">
+                {(<div className="channel-list">
                     <div className="channel-new-container">
                         <button className="channel-new-button" onClick={() => setShowChannelCreate(true)} disabled={servers[serverId].ownerId !== user.id} hidden={servers[serverId].ownerId !== user.id}>New Channel <i class="fa-solid fa-plus"></i></button>
                         <div className="create-channel-show" hidden={!showChannelCreate}>
@@ -282,8 +282,7 @@ function ServerChannels({servers, path, url, user, newServerMessage, newChannelM
                             <button className="close-channel-form-button" onClick={() => setShowChannelCreate(false)}>Cancel <i class="fa-solid fa-xmark"></i></button>
                         </div>
                     </div>
-
-                        {channels.map(c => (
+                        {!!channels?.length && channels.map(c => (
                             <div>
                                 <div className="channel-item-container">
                                     {/* <span className="channel-item-unread" hidden={!newChannelMessage[c.id] || c.id.toString() === channelId}>*</span> */}
