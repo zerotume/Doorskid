@@ -11,8 +11,8 @@ import ChannelForm from "../ChannelForm/ChannelForm";
 import { deleteChannelThunk } from "../../store/channels";
 import "./MainPage.css";
 import ChannelmessageForm from "../ChannelmessageForm/ChannelmessageForm";
-const SOCKET_IO_URL = process.env.SOCKET_IO_URL || "ws://localhost:3000";
-const socket = io(SOCKET_IO_URL);
+const REACT_APP_SOCKET_IO_URL = process.env.REACT_APP_SOCKET_IO_URL || "ws://localhost:3000";
+const socket = io(REACT_APP_SOCKET_IO_URL);
 
 
 
