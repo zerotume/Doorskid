@@ -96,13 +96,18 @@
 .single-message-container{
     padding-bottom: 1rem;
     width: 100%;
+}
 
+.message-main-container{
+    width:80%;
 }
 
 .single-message-container div{
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    white-space: initial;
+    word-break: break-word;
 }
 
 
