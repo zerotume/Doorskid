@@ -91,7 +91,7 @@ function MainPage({sessionLoaded}){
                         servers.serverList.map(e => (
                             <div>
                                 <div className="server-item-container">
-                                    <span className="server-item-unread" hidden={!newServerMessage[e.id] || serverId===e.id.toString()}>*</span>
+                                    {/* <span className="server-item-unread" hidden={!newServerMessage[e.id] || serverId===e.id.toString()}>*</span> */}
                                     <Link className="server-item-link" disabled={e.id.toString() === serverId} onClick={() => setNewServerMessage({...newServerMessage, [serverId]:false})}
                                         to={`${url}/${e.id}/${e.Channels?.length?e.Channels[0].id:"none"}`} > {e.name} |</Link>
                                     <div className="server-buttons">
@@ -158,14 +158,14 @@ function ServerChannels({servers, path, url, user, newServerMessage, newChannelM
         console.log("rerendered, serverId", serverId);
         setIsLoaded(false);
         setContent('');
-        dispatch(getChannelmessagesThunk(channelId)).then(() => setIsLoaded(true))
+        if(channelId!=='none')dispatch(getChannelmessagesThunk(channelId)).then(() => setIsLoaded(true))
         // if(!isLoaded && !sessionUser) return history.push('/');
         // console.log(channelmessages)
         socket.on('channelbroadcast', data => {
             console.log(data);
             if(data.serverId.toString() === serverId){
                 if(data.channelId.toString() === channelId){
-                    dispatch(getChannelmessagesThunk(channelId));
+                    if(channelId!=='none')dispatch(getChannelmessagesThunk(channelId));
                     messageContainer.current.scrollIntoView({behavior:"smooth"});//doesn't work
                 }
             }
@@ -286,7 +286,7 @@ function ServerChannels({servers, path, url, user, newServerMessage, newChannelM
                         {channels.map(c => (
                             <div>
                                 <div className="channel-item-container">
-                                    <span className="channel-item-unread" hidden={!newChannelMessage[c.id] || c.id.toString() === channelId}>*</span>
+                                    {/* <span className="channel-item-unread" hidden={!newChannelMessage[c.id] || c.id.toString() === channelId}>*</span> */}
                                     <Link className="channel-item-link" onClick={channelItemClick} disabled={c.id.toString() === channelId}
                                         to={`${url}/${serverId}/${c.id}`} > {c.name} |</Link>
                                     <div className="channel-buttons">
