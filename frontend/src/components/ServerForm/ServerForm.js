@@ -56,9 +56,9 @@ function ServerForm({server, formType, setShowServerEdit, setShowServerCreate, s
                         required
                         />
                 </div>
-                <input className="server-form-input-button"
+                <button className="server-form-input-button"
                     type="Submit"
-                value={formType} />
+                 >{formType} <i class="fa-solid fa-check"></i></button>
             </form>
         </div>
     )

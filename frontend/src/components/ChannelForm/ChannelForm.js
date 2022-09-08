@@ -55,9 +55,9 @@ function ChannelForm({channel, formType, setShowChannelEdit, sessionLoaded,setSh
                         required
                         />
                 </div>
-                <input className="channel-form-input-button"
+                <button className="channel-form-input-button"
                     type="Submit"
-                value={formType} />
+                >{formType} <i class="fa-solid fa-check"></i></button>
             </form>
         </div>
     )

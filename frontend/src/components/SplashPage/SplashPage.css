@@ -59,6 +59,26 @@
 .splash-buttons-container{
     display: flex;
     margin-top: 3rem;
-    justify-content: space-between;
-    width:30%;
+    justify-content: space-around;
+    width:45%;
+    height:30%
+}
+
+.splash-button{
+    border-radius: 1.7rem;
+    width:45%;
+    height:100%;
+    font-size: 1.25rem;
+}
+
+.splash-register{
+    border:none;
+    background-color:whitesmoke;
+    color: #23272a;
+}
+
+.splash-login{
+    border:none;
+    color:#f4e4c7;
+    background-color: #23272a;
 }

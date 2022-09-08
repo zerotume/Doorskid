@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {Link, Redirect, useHistory} from "react-router-dom";
 import * as sessionActions from "../../store/session";
+import "./SignupFormPage.css"
 
 
 function SignupFormPage() {
@@ -36,82 +37,84 @@ function SignupFormPage() {
 
     return(
       <div className='signup-page'>
-        <div className="signup-title">Create an account</div>
-        <form onSubmit={handleSubmit}>
-          <ul>
-            {errors.map((error, idx) => <li key={idx}>{error}</li>)}
-          </ul>
-          <div className='login-form-label'>
-            <label>
-              Email
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-              />
-            </label>
-          </div>
-          <div className='login-form-label'>
-            <label>
-              Username
-              <input
-                type="text"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                required
-              />
-            </label>
-          </div>
-          <div className='login-form-label'>
-            <label>
-              First Name
-              <input
-                type="text"
-                value={firstName}
-                onChange={(e) => setFirstName(e.target.value)}
-                required
-              />
-            </label>
-          </div>
-          <div className='login-form-label'>
-            <label>
-              Last Name
-              <input
-                type="text"
-                value={lastName}
-                onChange={(e) => setLastName(e.target.value)}
-                required
-              />
-            </label>
-          </div>
-          <div className='login-form-label'>
-            <label>
-              Password
-              <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-              />
-            </label>
-          </div>
-          <div className='login-form-label'>
-            <label>
-              Confirm Password
-              <input
-                type="password"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                required
-              />
-            </label>
-          </div>
-          <button type="submit">Sign Up</button>
-          <div className="register-to-login lo-re-div">
-            <Link className='register-to-login-link lore-link' to="/login">Already have an account?</Link>
-          </div>
-        </form>
+        <div className="signup-container">
+          <div className="signup-title">Create an account</div>
+          <form onSubmit={handleSubmit} className="signup-form">
+            <ul>
+              {errors.map((error, idx) => <li key={idx}>{error}</li>)}
+            </ul>
+            <div className='signup-form-label'>
+              <label>
+                Email</label>
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                />
+
+            </div>
+            <div className='signup-form-label'>
+              <label>
+                Username </label>
+                <input
+                  type="text"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  required
+                />
+
+            </div>
+            <div className='signup-form-label'>
+              <label>
+                First Name</label>
+                <input
+                  type="text"
+                  value={firstName}
+                  onChange={(e) => setFirstName(e.target.value)}
+                  required
+                />
+
+            </div>
+            <div className='signup-form-label'>
+              <label>
+                Last Name</label>
+                <input
+                  type="text"
+                  value={lastName}
+                  onChange={(e) => setLastName(e.target.value)}
+                  required
+                />
+
+            </div>
+            <div className='signup-form-label'>
+              <label>
+                Password</label>
+                <input
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                />
+
+            </div>
+            <div className='signup-form-label'>
+              <label>
+                Confirm Password</label>
+                <input
+                  type="password"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  required
+                />
+
+            </div>
+            <button type="submit">Sign Up</button>
+            <div className="register-to-login lo-re-div">
+              <Link className='register-to-login-link lore-link' to="/login">Already have an account?</Link>
+            </div>
+          </form>
+        </div>
       </div>
     );
 }
