@@ -12,7 +12,8 @@ import { deleteChannelThunk } from "../../store/channels";
 import "./MainPage.css";
 import ChannelmessageForm from "../ChannelmessageForm/ChannelmessageForm";
 const REACT_APP_SOCKET_IO_URL = process.env.REACT_APP_SOCKET_IO_URL || "ws://localhost:3000";
-const socket = io(REACT_APP_SOCKET_IO_URL);
+const socket = io.connect(REACT_APP_SOCKET_IO_URL, {secure: true});
+
 
 //console.log('rebuild ohoo');
 
@@ -141,6 +142,7 @@ function ServerChannels({servers, path, url, user, newServerMessage, newChannelM
     if(channelId !== 'none') channels = servers[serverId].Channels;
     const messageContainer = useRef(null);
 
+
     // setNewServerMessage({...newServerMessage, [serverId]:false});
     // if(channelId !== 'none')setNewChannelMessage({...newChannelMessage, [channelId]:false});
 
@@ -228,6 +230,7 @@ function ServerChannels({servers, path, url, user, newServerMessage, newChannelM
         messages = (<div></div>);
     }
 
+    if(isLoaded && messages)messageContainer.current.scrollIntoView({behavior:"smooth"});
 
     // console.log(messages);
 
@@ -279,8 +282,9 @@ function ServerChannels({servers, path, url, user, newServerMessage, newChannelM
                             Server {serverId} Channel {channelId}
                         </h3>
                     </div>
-                    <div className="messages-container" ref={messageContainer}>
+                    <div className="messages-container" >
                         {isLoaded && messages}
+                        <div ref={messageContainer} />
                     </div>
                     <div className="message-form-container">
                         <form className="message-form">
