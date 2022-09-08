@@ -11,6 +11,7 @@ import ChannelForm from "../ChannelForm/ChannelForm";
 import { deleteChannelThunk } from "../../store/channels";
 import "./MainPage.css";
 import ChannelmessageForm from "../ChannelmessageForm/ChannelmessageForm";
+import ProblemPage from "../ProblemPage/ProblemPage";
 const REACT_APP_SOCKET_IO_URL = process.env.REACT_APP_SOCKET_IO_URL || "ws://localhost:3000";
 const socket = io.connect(REACT_APP_SOCKET_IO_URL, {secure: true});
 
@@ -50,6 +51,14 @@ function MainPage({sessionLoaded}){
             }
         });
 
+        socket.on("changedRerender", data => {
+            setIsLoaded(false);
+            dispatch(getServersThunk()).then(() => {
+                setIsLoaded(true);
+                return setRerender({});
+            });
+        });
+
         return () => {
             socket.removeAllListeners();
         }
@@ -60,9 +69,10 @@ function MainPage({sessionLoaded}){
         const data = await dispatch(deleteServerThunk(id));
         if(data){
             //todo: error handling
-            console.log('if data')
+            // console.log('if data')
         }else{
-            console.log('else')
+            // console.log('else')
+            socket.emit("somethingDeleted", {serverId, channelId});
             dispatch(getServersThunk()).then(() => history.replace(``));
             // return <Redirect to="/main" />
             setShowServerCreate(false);
@@ -81,7 +91,7 @@ function MainPage({sessionLoaded}){
                     <div className="server-new-container">
                         <button className="server-new-button" onClick={() => setShowServerCreate(true)}>New Server <i class="fa-solid fa-plus"></i></button>
                         <div className="create-server-show" hidden={!showServerCreate}>
-                            <ServerForm setRerender={setRerender} formType={"Create Server"} server={{ownerId:sessionUser.id}} setShowServerCreate={setShowServerCreate} sessionLoaded={sessionLoaded} />
+                            <ServerForm socket={socket} setRerender={setRerender} formType={"Create Server"} server={{ownerId:sessionUser.id}} setShowServerCreate={setShowServerCreate} sessionLoaded={sessionLoaded} />
                             <button className="close-server-form-button" onClick={() => setShowServerCreate(false)}>Cancel <i class="fa-solid fa-xmark"></i></button>
                         </div>
                     </div>
@@ -93,7 +103,7 @@ function MainPage({sessionLoaded}){
                                 <div className="server-item-container">
                                     {/* <span className="server-item-unread" hidden={!newServerMessage[e.id] || serverId===e.id.toString()}>*</span> */}
                                     <Link className="server-item-link" disabled={e.id.toString() === serverId} onClick={() => setNewServerMessage({...newServerMessage, [serverId]:false})}
-                                        to={`${url}/${e.id}/${e.Channels?.length?e.Channels[0].id:"none"}`} > {e.name} |</Link>
+                                        to={`${url}/${e.id}/${e.Channels?.length?e.Channels[0].id:"none"}`} > {e.name}</Link>
                                     <div className="server-buttons">
                                         <button className="server-edit-button" onClick={() => setShowServerEdit(e.id)} disabled={e.ownerId !== sessionUser.id} hidden={e.ownerId !== sessionUser.id}><i class="fa-solid fa-gear"></i></button>
                                         <button className='server-delete-button' onClick={deleteClick(e.id)} disabled={e.ownerId !== sessionUser.id} hidden={e.ownerId !== sessionUser.id}><i class="fa-solid fa-trash"></i></button>
@@ -123,15 +133,18 @@ function MainPage({sessionLoaded}){
                     <ServerChannels servers={servers} path={path} url={url} user={sessionUser} sessionLoaded={sessionLoaded}
                     newServerMessage={newServerMessage} newChannelMessage={newChannelMessage}
                     setNewServerMessage={setNewServerMessage} setNewChannelMessage={setNewChannelMessage}
-                    setRerender={setRerender}
+                    setRerender={setRerender} outerHistory={history} socket={socket}
                     />
                 </Route>
+                {/* <Route path='/error'>
+                    <ProblemPage />
+                </Route> */}
             </Switch>
 
         </Router>
     )
 }
-function ServerChannels({servers, path, url, user, newServerMessage, newChannelMessage, setNewServerMessage, setNewChannelMessage, sessionLoaded, setRerender}){
+function ServerChannels({servers, path, url, outerHistory, socket, user, newServerMessage, newChannelMessage, setNewServerMessage, setNewChannelMessage, sessionLoaded, setRerender}){
 
     // console.log(newChannelMessage);
     const history = useHistory();
@@ -165,17 +178,35 @@ function ServerChannels({servers, path, url, user, newServerMessage, newChannelM
             console.log(data);
             if(data.serverId.toString() === serverId){
                 if(data.channelId.toString() === channelId){
-                    if(channelId!=='none')dispatch(getChannelmessagesThunk(channelId));
-                    messageContainer.current.scrollIntoView({behavior:"smooth"});//doesn't work
+                    if(channelId!=='none'){
+                        dispatch(getChannelmessagesThunk(channelId));
+                        messageContainer.current.scrollIntoView({behavior:"smooth"});//doesn't work
+                    }
                 }
             }
+        });
+
+        socket.on("deleteNotice", data => {
+            if(data.serverId.toString() === serverId){
+                if(data.channelId.toString() === channelId){
+                    outerHistory.replace('/error')
+                }
+            }
+        });
+
+        socket.on("changedRerender", data => {
+            setIsLoaded(false);
+            dispatch(getServersThunk()).then(() => {
+                setIsLoaded(true);
+                return setRerender({});
+            });
         });
 
         return () => {
             socket.removeAllListeners();
         }
 
-    }, [dispatch, serverId, channelId, channels.length]);
+    }, [dispatch, serverId, channelId]);
 
     if(!serverId){
         history.replace('');
@@ -256,6 +287,7 @@ function ServerChannels({servers, path, url, user, newServerMessage, newChannelM
             //todo: error handling
         }else{
             // console.log('here!');
+            socket.emit("somethingDeleted", {serverId, channelId});
             setShowChannelCreate(false);
             dispatch(getServersThunk()).then(() => {
                 serverId = null;
@@ -278,7 +310,7 @@ function ServerChannels({servers, path, url, user, newServerMessage, newChannelM
                     <div className="channel-new-container">
                         <button className="channel-new-button" onClick={() => setShowChannelCreate(true)} disabled={servers[serverId].ownerId !== user.id} hidden={servers[serverId].ownerId !== user.id}>New Channel <i class="fa-solid fa-plus"></i></button>
                         <div className="create-channel-show" hidden={!showChannelCreate}>
-                            <ChannelForm setRerender={setRerender} formType={"Create Channel"} channel={{serverId:serverId}} setShowChannelCreate={setShowChannelCreate} sessionLoaded={sessionLoaded} />
+                            <ChannelForm socket={socket} setRerender={setRerender} formType={"Create Channel"} channel={{serverId:serverId}} setShowChannelCreate={setShowChannelCreate} sessionLoaded={sessionLoaded} />
                             <button className="close-channel-form-button" onClick={() => setShowChannelCreate(false)}>Cancel <i class="fa-solid fa-xmark"></i></button>
                         </div>
                     </div>
@@ -287,7 +319,7 @@ function ServerChannels({servers, path, url, user, newServerMessage, newChannelM
                                 <div className="channel-item-container">
                                     {/* <span className="channel-item-unread" hidden={!newChannelMessage[c.id] || c.id.toString() === channelId}>*</span> */}
                                     <Link className="channel-item-link" onClick={channelItemClick} disabled={c.id.toString() === channelId}
-                                        to={`${url}/${serverId}/${c.id}`} > {c.name} |</Link>
+                                        to={`${url}/${serverId}/${c.id}`} > {c.name}</Link>
                                     <div className="channel-buttons">
                                         <button className="channel-edit-button" onClick={() => setShowChannelEdit(c.id)} disabled={servers[serverId].ownerId !== user.id} hidden={servers[serverId].ownerId !== user.id}><i class="fa-solid fa-gear"></i></button>
                                         <button className='channel-delete-button' onClick={deleteClick(c.id)} disabled={servers[serverId].ownerId !== user.id} hidden={servers[serverId].ownerId !== user.id}><i class="fa-solid fa-trash"></i></button>

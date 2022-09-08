@@ -5,7 +5,7 @@ const { useDispatch, useSelector } = require("react-redux");
 const { useHistory } = require("react-router-dom");
 
 
-function ServerForm({server, formType, setShowServerEdit, setShowServerCreate, sessionLoaded, setRerender}){
+function ServerForm({server, socket, formType, setShowServerEdit, setShowServerCreate, sessionLoaded, setRerender}){
     const dispatch = useDispatch();
     const user = useSelector(state => state.session.user);
     const [serverName, setServerName] = useState(server.name || '');
@@ -24,10 +24,10 @@ function ServerForm({server, formType, setShowServerEdit, setShowServerCreate, s
             name:serverName,
         };
         setErrors([]);
-        setServerName("");
+        setServerName(server.name || "");
         let data = await dispatch(actions[formType](server));
         // console.log("wat?");
-        if(data.errors){
+        if(data?.errors){
             // console.log("nani?")
             //todo: error handleing
         }else{
@@ -35,9 +35,11 @@ function ServerForm({server, formType, setShowServerEdit, setShowServerCreate, s
             if(formType==="Edit Server")setShowServerEdit(-1);
             if(formType==="Create Server")setShowServerCreate(false);
             // dispatch(getServersThunk());
+            // socket.emit("somethingChanged", {serverId:server.id});
             dispatch(getServersThunk()).then(() => {
-                history.replace(`/main`)
-                return setRerender({});
+                setRerender({});
+                console.log('here')
+                return history.replace(`/main`)
             });
         }
     }
@@ -50,20 +52,20 @@ function ServerForm({server, formType, setShowServerEdit, setShowServerCreate, s
                 </ul>
                 <div className="server-form-label">
                     <label
-                    style={{color:(serverName.length >= 20)?'#f08486':''}}
+                    style={{color:(serverName.length >= 10)?'#f08486':''}}
                     >
-                        Server Name:{serverName.length}/20</label>
+                        Server Name:{serverName.length}/10</label>
                         <input
                         type="text"
-                        placeholder="1 to 20 alpha and numbers"
+                        placeholder="1 to 10 alpha and numbers"
                         value={serverName}
-                        style={{border:(serverName.length >= 20)?'2px red solid':''}}
+                        style={{border:(serverName.length >= 10)?'2px red solid':''}}
                         onChange={(e) => setServerName(e.target.value)}
                         required
                         minlength="1"
-                        maxlength="20"
-                        pattern="[a-zA-Z0-9]{1,20}"
-                        title="1 to 20 alpha and numbers"
+                        maxlength="10"
+                        pattern="[a-zA-Z0-9]{1,10}"
+                        title="1 to 10 alpha and numbers"
                         />
                 </div>
                 <button className="server-form-input-button"

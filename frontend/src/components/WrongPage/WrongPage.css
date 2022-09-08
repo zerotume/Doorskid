@@ -1,0 +1,28 @@
+.wrong-container{
+    height:100vh;
+    width:100vw;
+    background-color: #404eed;
+    margin-top: -2rem;
+    margin-left:-1rem;
+    padding-bottom: 1rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: var(--font-display);
+    color: whitesmoke;
+}
+
+.wrong-notice-container{
+    display:flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    font-family: var(--font-display);
+    background-color: #36393f;
+    width:50%;
+}
+
+.wrong-notice-container a{
+    color:#079fdc;
+    text-decoration: none;
+}

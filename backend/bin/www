@@ -57,6 +57,14 @@ io.on("connection", socket => {
     io.to(serverId.toString()).emit('channelbroadcast', {serverId, channelId})
   });
 
+  socket.on("somethingDeleted", ({serverId, channelId}) => {
+    io.to(serverId.toString()).emit("deleteNotice", {serverId, channelId});
+  });
+
+  socket.on("somethingChanged", ({serverId}) => {
+    io.to(serverId.toString()).emit("changedRerender")
+  })
+
 })
 
 

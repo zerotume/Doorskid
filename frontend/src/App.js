@@ -4,8 +4,10 @@ import { Route, Switch } from "react-router";
 import LoginFormPage from "./components/LoginFormPage";
 import MainPage from "./components/MainPage/MainPage";
 import Navigation from "./components/Navigation";
+import ProblemPage from "./components/ProblemPage/ProblemPage";
 import SignupFormPage from "./components/SignupFormPage";
 import SplashPage from "./components/SplashPage/SplashPage";
+import WrongPage from "./components/WrongPage/WrongPage";
 import * as sessionActions from './store/session';
 
 function App() {
@@ -33,6 +35,12 @@ function App() {
         </Route>
         <Route path="/main">
           <MainPage sessionLoaded={sessionLoaded}/>
+        </Route>
+        <Route path='/error' >
+          <ProblemPage />
+        </Route>
+        <Route path='*' >
+          <WrongPage />
         </Route>
       </Switch>
     </div>
