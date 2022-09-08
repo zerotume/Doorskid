@@ -255,6 +255,10 @@ ul.profile-dropdown button:hover{
     font-size: 1rem;
 }
 
+.message-form-label textarea:disabled{
+    cursor: not-allowed;
+}
+
 .message-form-label label{
     color:#7a8183;
     padding-bottom:0.3rem;
@@ -267,6 +271,8 @@ ul.profile-dropdown button:hover{
     width:10%;
     /* align-self: center; */
 }
+
+
 
 .server-list button, .channel-list-container button{
     background-color: transparent;
@@ -319,4 +325,9 @@ ul.profile-dropdown button:hover{
     padding-left: 0.3rem;
     color:#b7bdb6;
     font-size: 1rem;
+}
+
+.message-form button:disabled{
+    color: #737d7b;
+    cursor:not-allowed;
 }
