@@ -147,7 +147,8 @@ html{
     /* align-self: center; */
     margin-top: 95vh;
     position:absolute;
-    margin-left: 2rem;
+    margin-left: 0.8rem;
+    font-family: inherit;
 
 }
 
@@ -155,8 +156,49 @@ html{
     bottom: 3rem;
     position: fixed;
     list-style-type:none;
-    margin-left: -2rem;
+    margin-left: -0.5rem;
 }
+
+.profile-dropdown li{
+    margin-left: 0rem;
+}
+
+.profile-dropdown button{
+    background-color: transparent;
+    border: none;
+    font-size: 1rem;
+    color: #b7bdb6;
+    line-height:1.5rem;
+    width:100%;
+    text-align: left;
+    margin-top:0.5rem;
+    padding-left: 0.2rem;
+    font-family: inherit;
+    cursor: pointer;
+}
+
+.profile-bar>button{
+    background-color: transparent;
+    border: none;
+    font-size: 1rem;
+    color: whitesmoke;
+    line-height:1.5rem;
+    width:120%;
+    text-align: left;
+    padding-left: 2rem;
+    font-family: inherit;
+    cursor: pointer;
+}
+
+.profile-bar>button:hover{
+    background-color: #40444b;
+}
+
+
+ul.profile-dropdown button:hover{
+    background-color: #5865f2
+}
+
 
 .single-message-container{
     display: flex;

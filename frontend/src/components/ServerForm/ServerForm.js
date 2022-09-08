@@ -49,14 +49,19 @@ function ServerForm({server, formType, setShowServerEdit, setShowServerCreate, s
                     {errors.map((error, idx) => <li key={idx}>{error}</li>)}
                 </ul>
                 <div className="server-form-label">
-                    <label>
-                        Server Name:</label>
+                    <label
+                    style={{color:(serverName.length >= 20)?'#f08486':''}}
+                    >
+                        Server Name:{serverName.length}/20</label>
                         <input
                         type="text"
                         placeholder="1 to 20 alpha and numbers"
                         value={serverName}
+                        style={{border:(serverName.length >= 20)?'2px red solid':''}}
                         onChange={(e) => setServerName(e.target.value)}
                         required
+                        minlength="1"
+                        maxlength="20"
                         pattern="[a-zA-Z0-9]{1,20}"
                         title="1 to 20 alpha and numbers"
                         />

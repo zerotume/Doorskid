@@ -314,7 +314,9 @@ function ServerChannels({servers, path, url, user, newServerMessage, newChannelM
                     <div className="message-form-container">
                         <form className="message-form">
                             <div className='message-form-label'>
-                                <label>
+                                <label
+                                style={{color:(content.length >= 140)?'#f08486':''}}
+                                >
                                 Message:{content.length}/140
                                 </label>
                                 <textarea
@@ -323,6 +325,7 @@ function ServerChannels({servers, path, url, user, newServerMessage, newChannelM
                                     value={content}
                                     onChange={(e) => setContent(e.target.value)}
                                     required
+                                    style={{border:(content.length >= 140)?'2px red solid':''}}
                                     minlength="1"
                                     maxlength="140"
                                     title="1 to 140 characters for the communication!"
