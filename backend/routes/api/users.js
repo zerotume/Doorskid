@@ -29,8 +29,8 @@ const validateSignup = [
 
 router.post('/', validateSignup, async (req,res) => {
     // res.cookie('XSRF-Token', req.csrfToken());
-    const {email, password, username} = req.body;
-    const user = await User.signup({email, username, password});
+    const {email, password, username,firstName,lastName} = req.body;
+    const user = await User.signup({email, username, password,firstName,lastName});
 
     await setTokenCookie(res, user);
 

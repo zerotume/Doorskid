@@ -38,7 +38,7 @@ function ChannelmessageForm({channelmessage, setShowChannelmessageEdit, sessionL
                 <div className="channelmessage-form-label">
                     <label> Update message here: {messageContent.length}/140
                         </label>
-                        <input
+                        <textarea
                         type="text"
                         placeholder="How you wanna change your message?"
                         minlength="1"
