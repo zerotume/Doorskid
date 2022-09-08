@@ -82,3 +82,18 @@
     color:#f4e4c7;
     background-color: #23272a;
 }
+
+.splash-header-login{
+    border:none;
+    background-color:whitesmoke;
+    color: #23272a;
+    border-radius: 1.7rem;
+    width:45%;
+    height:100%;
+    font-size: 1.1rem;
+    width:120%;
+}
+
+.splash-container button{
+    cursor:pointer;
+}
