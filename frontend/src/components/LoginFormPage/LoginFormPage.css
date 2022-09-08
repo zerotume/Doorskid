@@ -53,3 +53,42 @@
 .lo-re-div{
     margin-top: 1rem;
 }
+
+.signup-submit, .login-submit{
+    border-radius:0.4rem;
+    width:45%;
+    height:100%;
+    font-size: 1.25rem;
+    border:none;
+    background-color:#5865f2;
+    color: whitesmoke;
+    width:100%;
+}
+/*
+.signup-submit{
+    border:none;
+    background-color:whitesmoke;
+    color: #23272a;
+}
+
+.login-submit{
+    border:none;
+    color:#f4e4c7;
+    background-color: #23272a;
+} */
+
+.demo-login-submit{
+    border-radius:0.4rem;
+    width:45%;
+    height:100%;
+    font-size: 1.25rem;
+    border:none;
+    background-color:#36393f;
+    color: whitesmoke;
+    width:60%;
+    margin-top: 1rem;
+}
+
+.login-page button, .signup-page button{
+    cursor: pointer;
+}

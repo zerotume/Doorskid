@@ -25,6 +25,16 @@ function LoginFormPage() {
       });
   }
 
+  const clickDemo = e => {
+    e.preventDefault();
+    const user = {credential:"demo@user.io", password:"password"};
+    return dispatch(sessionActions.loginAction(user))
+      .catch(async (res) => {
+        const data = await res.json();
+        if (data && data.errors) setErrors(data.errors);
+      });
+  }
+
   return (
 
     <div className='login-page'>
@@ -59,6 +69,7 @@ function LoginFormPage() {
           </div>
           <button className='login-submit' type="submit">Log In</button>
         </form>
+          <button className='demo-login-submit' type="submit" onClick={clickDemo}>Log In With Demo User</button>
         <div className='login-to-register lo-re-div'>
           <span className='login-to-register-text lore-text'>Need an account?</span>
           <Link className='login-to-register-link lore-link' to="/signup">Register</Link>
