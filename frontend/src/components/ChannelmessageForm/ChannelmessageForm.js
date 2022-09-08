@@ -46,9 +46,9 @@ function ChannelmessageForm({channelmessage, setShowChannelmessageEdit, sessionL
                         required
                         />
                 </div>
-                <input className="channelmessage-form-input-button"
+                <button className="channelmessage-form-input-button"
                     type="Submit"
-                value="Edit Message" />
+                 >Confirm Edit <i class="fa-solid fa-check"></i></button>
             </form>
         </div>
     )

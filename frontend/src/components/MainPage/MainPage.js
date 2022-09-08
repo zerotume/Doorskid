@@ -89,10 +89,12 @@ function MainPage({sessionLoaded}){
                         servers.serverList.map(e => (
                             <div className="server-item-container">
                                 <span className="server-item-unread" hidden={!newServerMessage[e.id] || serverId===e.id.toString()}>*</span>
-                                <Link className="server-item-link" onClick={() => setNewServerMessage({...newServerMessage, [serverId]:false})}
+                                <Link className="server-item-link" disabled={e.id.toString() === serverId} onClick={() => setNewServerMessage({...newServerMessage, [serverId]:false})}
                                     to={`${url}/${e.id}/${e.Channels?.length?e.Channels[0].id:"none"}`} > {e.name} |</Link>
-                                <button onClick={() => setShowServerEdit(e.id)} disabled={e.ownerId !== sessionUser.id} hidden={e.ownerId !== sessionUser.id}><i class="fa-solid fa-gear"></i></button>
-                                <button className='server-delete-button' onClick={deleteClick(e.id)} disabled={e.ownerId !== sessionUser.id} hidden={e.ownerId !== sessionUser.id}><i class="fa-solid fa-trash"></i></button>
+                                <div className="server-buttons">
+                                    <button className="server-edit-button" onClick={() => setShowServerEdit(e.id)} disabled={e.ownerId !== sessionUser.id} hidden={e.ownerId !== sessionUser.id}><i class="fa-solid fa-gear"></i></button>
+                                    <button className='server-delete-button' onClick={deleteClick(e.id)} disabled={e.ownerId !== sessionUser.id} hidden={e.ownerId !== sessionUser.id}><i class="fa-solid fa-trash"></i></button>
+                                </div>
                                 <div className="update-server-show" hidden={e.id!==showServerEdit}>
                                     <ServerForm formType={"Edit Server"} server={e} setShowServerEdit={setShowServerEdit} sessionLoaded={sessionLoaded} />
                                     <button className="close-server-form-button" onClick={() => setShowServerEdit(-1)}>Cancel <i class="fa-solid fa-xmark"></i></button>
@@ -220,9 +222,9 @@ function ServerChannels({servers, path, url, user, newServerMessage, newChannelM
                             disabled={e.senderId.toString() !== userId.toString()}
                             hidden={e.senderId.toString() !== userId.toString()}>
                                 {/* <i class="fa-regular fa-gear"></i> */}
-                                Edit
+                                <i class="fa-solid fa-pen"></i>
                         </button>
-                        <button className="message-button message-delete-button" onClick={deleteMessage(e.id)} disabled={e.senderId.toString() !== userId.toString()} hidden={e.senderId.toString() !== userId.toString()}>Delete</button>
+                        <button className="message-button message-delete-button" onClick={deleteMessage(e.id)} disabled={e.senderId.toString() !== userId.toString()} hidden={e.senderId.toString() !== userId.toString()}><i class="fa-solid fa-trash"></i></button>
                     </div>
                 </div>
                 <div className="update-message-show" hidden={e.id!==showChannelmessageEdit}>
@@ -230,7 +232,7 @@ function ServerChannels({servers, path, url, user, newServerMessage, newChannelM
                             setShowChannelmessageEdit={setShowChannelmessageEdit}
                             sessionLoaded={sessionLoaded} socket={socket}
                             serverId={serverId} channelId={channelId}/>
-                    <button className="close-server-form-button" onClick={() => setShowChannelmessageEdit(-1)}>Cancel</button>
+                    <button className="close-server-form-button" onClick={() => setShowChannelmessageEdit(-1)}>Cancel <i class="fa-solid fa-xmark"></i></button>
                 </div>
             </div>
         )))
@@ -275,8 +277,10 @@ function ServerChannels({servers, path, url, user, newServerMessage, newChannelM
                                 <span className="channel-item-unread" hidden={!newChannelMessage[c.id] || c.id.toString() === channelId}>*</span>
                                 <Link className="channel-item-link" onClick={channelItemClick} disabled={c.id.toString() === channelId}
                                     to={`${url}/${serverId}/${c.id}`} > {c.name} |</Link>
-                                <button onClick={() => setShowChannelEdit(c.id)} disabled={servers[serverId].ownerId !== user.id} hidden={servers[serverId].ownerId !== user.id}><i class="fa-solid fa-gear"></i></button>
-                                <button className='channel-delete-button' onClick={deleteClick(c.id)} disabled={servers[serverId].ownerId !== user.id} hidden={servers[serverId].ownerId !== user.id}><i class="fa-solid fa-trash"></i></button>
+                                <div className="channel-buttons">
+                                    <button className="channel-edit-button" onClick={() => setShowChannelEdit(c.id)} disabled={servers[serverId].ownerId !== user.id} hidden={servers[serverId].ownerId !== user.id}><i class="fa-solid fa-gear"></i></button>
+                                    <button className='channel-delete-button' onClick={deleteClick(c.id)} disabled={servers[serverId].ownerId !== user.id} hidden={servers[serverId].ownerId !== user.id}><i class="fa-solid fa-trash"></i></button>
+                                </div>
                                 <div className="update-channel-show" hidden={c.id!==showChannelEdit}>
                                     <ChannelForm formType={"Edit Channel"} channel={c} setShowChannelEdit={setShowChannelEdit} sessionLoaded={sessionLoaded} />
                                     <button className="close-server-form-button" onClick={() => setShowChannelEdit(-1)}>Cancel <i class="fa-solid fa-xmark"></i></button>
@@ -300,7 +304,7 @@ function ServerChannels({servers, path, url, user, newServerMessage, newChannelM
                                 <label>
                                 Message:
                                 </label>
-                                <input
+                                <textarea
                                     type="text"
                                     disabled={channelId === 'none'}
                                     value={content}
@@ -308,7 +312,7 @@ function ServerChannels({servers, path, url, user, newServerMessage, newChannelM
                                     required
                                 />
                             </div>
-                            <button onClick={submitMessage} disabled={channelId === 'none'}>Submit</button>
+                            <button onClick={submitMessage} disabled={channelId === 'none'}><i class="fa-solid fa-paper-plane"></i></button>
                         </form>
                     </div>
                 </div>
