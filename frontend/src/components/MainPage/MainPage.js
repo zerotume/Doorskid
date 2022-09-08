@@ -15,7 +15,7 @@ const REACT_APP_SOCKET_IO_URL = process.env.REACT_APP_SOCKET_IO_URL || "ws://loc
 const socket = io.connect(REACT_APP_SOCKET_IO_URL, {secure: true});
 
 
-//console.log('rebuild ohoo');
+//console.log('rebuild ohoo123');
 
 
 function MainPage({sessionLoaded}){
