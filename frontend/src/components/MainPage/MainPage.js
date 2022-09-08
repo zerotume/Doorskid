@@ -14,7 +14,7 @@ import ChannelmessageForm from "../ChannelmessageForm/ChannelmessageForm";
 const REACT_APP_SOCKET_IO_URL = process.env.REACT_APP_SOCKET_IO_URL || "ws://localhost:3000";
 const socket = io(REACT_APP_SOCKET_IO_URL);
 
-//console.log('rebuild');
+//console.log('rebuild ohoo');
 
 
 function MainPage({sessionLoaded}){
