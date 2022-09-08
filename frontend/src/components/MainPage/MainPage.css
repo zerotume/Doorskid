@@ -313,6 +313,13 @@ ul.profile-dropdown button:hover{
     flex-basis:100%;
 } */
 
+.channel-header {
+    border-bottom: 2px solid black;
+    margin-bottom: 1rem;
+    margin-left: -2rem;
+    padding-left: 1rem;
+    margin-top:0.5rem;
+}
 
 .channelmessage-form-label textarea{
     width:80%;
