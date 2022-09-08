@@ -250,3 +250,11 @@ html{
     /* background-color: #42464d; */
     color: #e0e0e2;
 }
+
+.server-form-label input, .channel-form-label input{
+    background-color: #40444b;
+    color:#b7bdb6;
+    border:none;
+    border-radius: 0.5rem;
+    width:80%;
+}
