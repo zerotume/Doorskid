@@ -36,11 +36,14 @@ function ChannelmessageForm({channelmessage, setShowChannelmessageEdit, sessionL
                     {errors.map((error, idx) => <li key={idx}>{error}</li>)}
                 </ul>
                 <div className="channelmessage-form-label">
-                    <label> Update message here:
+                    <label> Update message here: {messageContent.length}/140
                         </label>
                         <input
                         type="text"
                         placeholder="How you wanna change your message?"
+                        minlength="1"
+                        maxlength="140"
+                        title="1 to 140 characters for the communication!"
                         value={messageContent}
                         onChange={(e) => setMessageContent(e.target.value)}
                         required

@@ -50,10 +50,12 @@ function ServerForm({server, formType, setShowServerEdit, setShowServerCreate, s
                         Server Name:</label>
                         <input
                         type="text"
-                        placeholder="input your server name here!"
+                        placeholder="1 to 20 alpha and numbers"
                         value={serverName}
                         onChange={(e) => setServerName(e.target.value)}
                         required
+                        pattern="[a-zA-Z0-9]{1,20}"
+                        title="1 to 20 alpha and numbers"
                         />
                 </div>
                 <button className="server-form-input-button"

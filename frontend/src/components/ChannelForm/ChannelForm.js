@@ -49,10 +49,12 @@ function ChannelForm({channel, formType, setShowChannelEdit, sessionLoaded,setSh
                         Channel Name:</label>
                         <input
                         type="text"
-                        placeholder="input your channel name here!"
+                        pattern="[a-zA-Z0-9]{1,20}"
+                        placeholder="1 to 20 alpha and numbers"
                         value={channelName}
                         onChange={(e) => setChannelName(e.target.value)}
                         required
+                        title="1 to 20 alpha and numbers"
                         />
                 </div>
                 <button className="channel-form-input-button"

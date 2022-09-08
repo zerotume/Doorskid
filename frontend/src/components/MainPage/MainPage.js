@@ -302,7 +302,7 @@ function ServerChannels({servers, path, url, user, newServerMessage, newChannelM
                         <form className="message-form">
                             <div className='message-form-label'>
                                 <label>
-                                Message:
+                                Message:{content.length}/140
                                 </label>
                                 <textarea
                                     type="text"
@@ -310,6 +310,9 @@ function ServerChannels({servers, path, url, user, newServerMessage, newChannelM
                                     value={content}
                                     onChange={(e) => setContent(e.target.value)}
                                     required
+                                    minlength="1"
+                                    maxlength="140"
+                                    title="1 to 140 characters for the communication!"
                                 />
                             </div>
                             <button onClick={submitMessage} disabled={channelId === 'none'}><i class="fa-solid fa-paper-plane"></i></button>
