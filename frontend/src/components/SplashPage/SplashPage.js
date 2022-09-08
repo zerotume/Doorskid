@@ -1,5 +1,6 @@
 import { useSelector } from "react-redux";
 import { Link, useHistory } from "react-router-dom";
+import BottomNav from "../BottomNav/BottomNav";
 import './SplashPage.css';
 
 
@@ -66,6 +67,7 @@ function SplashPage(){
                     </div>
                 </div>
             </div>
+            <BottomNav />
         </div>
     )
 }
