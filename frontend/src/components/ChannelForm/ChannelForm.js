@@ -5,7 +5,7 @@ const { editChannelThunk, createChannelThunk } = require("../../store/channels")
 const { createServerThunk, getServersThunk } = require("../../store/servers");
 
 
-function ChannelForm({channel, formType, setShowChannelEdit, sessionLoaded,setShowChannelCreate}){
+function ChannelForm({channel, formType, setShowChannelEdit, sessionLoaded, setShowChannelCreate, setRerender}){
     const dispatch = useDispatch();
     const user = useSelector(state => state.session.user);
     const [channelName, setChannelName] = useState(channel.name || '')
@@ -33,8 +33,10 @@ function ChannelForm({channel, formType, setShowChannelEdit, sessionLoaded,setSh
             if(formType === "Edit Channel")setShowChannelEdit(-1);
             if(formType === "Create Channel")setShowChannelCreate(false);
             setChannelName('');
-            dispatch(getServersThunk()).then(() => history.replace(`/main`));
-
+            dispatch(getServersThunk()).then(() => {
+                history.replace(`/main`)
+                return setRerender({});
+            });
         }
     }
 

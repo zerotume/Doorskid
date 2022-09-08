@@ -17,6 +17,8 @@ function SignupFormPage() {
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
     const [errors, setErrors] = useState([]);
+    const [errorString, setErrorString] = useState('');
+    const [errorObj, setErrorObj] = useState({});
 
     if (sessionUser) return history.push("/main");
 
@@ -24,16 +26,31 @@ function SignupFormPage() {
         e.preventDefault();
 
         if(password !== confirmPassword){
-            return setErrors(["password is not equal to confirm password"]);
+            setErrors(["password is not equal to confirm password"]);
+            return setErrorString("password is not equal to confirm password")
         }else{
             setErrors([]);
+            setErrorString("");
+            setErrorObj({});
             return dispatch(sessionActions.signupAction({email, username, firstName, lastName, password}))
                 .catch(async (res) => {
                     const data = await res.json();
-                    if(data && data.errors) setErrors(data.errors);
+                    // console.log(data.errors);
+                    if(data && data.errors){
+                      if(Array.isArray(data.errors)){
+                        setErrors(data.errors);
+                        setErrorString(data.errors.join('/'))
+                      }else{
+                        setErrors(Object.values(data.errors));
+                        setErrorObj(data.errors);
+                      }
+
+                    }
                 });
         }
     }
+
+
 
     return(
       <div className='signup-page'>
@@ -48,6 +65,7 @@ function SignupFormPage() {
                 Email</label>
                 <input
                   type="email"
+                  style={{border:(errorString.includes('email')||errorObj.email)?'2px red solid':''}}
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
@@ -59,6 +77,7 @@ function SignupFormPage() {
                 Username </label>
                 <input
                   type="text"
+                  style={{border:(errorString.includes('username')||errorObj.username)?'2px red solid':''}}
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
                   required
@@ -71,6 +90,7 @@ function SignupFormPage() {
                 <input
                   type="text"
                   value={firstName}
+                  style={{border:(errorString.includes('firstName')||errorObj.firstName)?'2px red solid':''}}
                   onChange={(e) => setFirstName(e.target.value)}
                   required
                 />
@@ -82,6 +102,7 @@ function SignupFormPage() {
                 <input
                   type="text"
                   value={lastName}
+                  style={{border:(errorString.includes('lastName')||errorObj.lastName)?'2px red solid':''}}
                   onChange={(e) => setLastName(e.target.value)}
                   required
                 />
@@ -93,6 +114,7 @@ function SignupFormPage() {
                 <input
                   type="password"
                   value={password}
+                  style={{border:(errorString.includes('password')||errorObj.password)?'2px red solid':''}}
                   onChange={(e) => setPassword(e.target.value)}
                   required
                 />
@@ -104,6 +126,7 @@ function SignupFormPage() {
                 <input
                   type="password"
                   value={confirmPassword}
+                  style={{border:(errorString.includes('password')||errorObj.password)?'2px red solid':''}}
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   required
                 />

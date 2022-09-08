@@ -5,7 +5,7 @@ const { useDispatch, useSelector } = require("react-redux");
 const { useHistory } = require("react-router-dom");
 
 
-function ServerForm({server, formType, setShowServerEdit, setShowServerCreate, sessionLoaded}){
+function ServerForm({server, formType, setShowServerEdit, setShowServerCreate, sessionLoaded, setRerender}){
     const dispatch = useDispatch();
     const user = useSelector(state => state.session.user);
     const [serverName, setServerName] = useState(server.name || '');
@@ -34,8 +34,11 @@ function ServerForm({server, formType, setShowServerEdit, setShowServerCreate, s
             // console.log("here!")
             if(formType==="Edit Server")setShowServerEdit(-1);
             if(formType==="Create Server")setShowServerCreate(false);
-            dispatch(getServersThunk());
-            dispatch(getServersThunk()).then(() => history.replace(`/main`));
+            // dispatch(getServersThunk());
+            dispatch(getServersThunk()).then(() => {
+                history.replace(`/main`)
+                return setRerender({});
+            });
         }
     }
 
@@ -60,7 +63,7 @@ function ServerForm({server, formType, setShowServerEdit, setShowServerCreate, s
                 </div>
                 <button className="server-form-input-button"
                     type="Submit"
-                 >{formType} <i class="fa-solid fa-check"></i></button>
+                >{formType} <i class="fa-solid fa-check"></i></button>
             </form>
         </div>
     )

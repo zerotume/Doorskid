@@ -256,5 +256,11 @@ html{
     color:#b7bdb6;
     border:none;
     border-radius: 0.5rem;
-    width:80%;
+    width:90%;
+    height:2rem;
+    padding-left: 0.3rem;
 }
+
+/* .update-server-show{
+    flex-basis:100%;
+} */

@@ -21,6 +21,7 @@ function LoginFormPage() {
     return dispatch(sessionActions.loginAction(user))
       .catch(async (res) => {
         const data = await res.json();
+        console.log(data.errors);
         if (data && data.errors) setErrors(data.errors);
       });
   }
@@ -31,7 +32,16 @@ function LoginFormPage() {
     return dispatch(sessionActions.loginAction(user))
       .catch(async (res) => {
         const data = await res.json();
-        if (data && data.errors) setErrors(data.errors);
+        if(data && data.errors){
+          if(Array.isArray(data.errors)){
+            setErrors(data.errors);
+            // setErrorString(data.errors.join('/'))
+          }else{
+            setErrors(Object.values(data.errors));
+            // setErrorObj(data.errors);
+          }
+
+        }
       });
   }
 
@@ -53,6 +63,7 @@ function LoginFormPage() {
                 type="text"
                 value={credential}
                 onChange={(e) => setCredential(e.target.value)}
+                style={{border:(errors.length)?'2px red solid':''}}
                 required
               />
           </div>
@@ -64,6 +75,7 @@ function LoginFormPage() {
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+                style={{border:(errors.length)?'2px red solid':''}}
                 required
               />
           </div>
