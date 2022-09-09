@@ -26,7 +26,7 @@ function ProblemPage(){
                          your previous position is nuked.
                     </span>
                 </h1>
-                <h2 className="problem-red">The mod just deleted the server/channel.</h2>
+                <h2 className="problem-red">The mod just deleted/modified the server/channel.</h2>
                 <h2>But no worries, We'll send you back in 3 seconds!</h2>
                 <h2>Or you want to go back faster: <Link to="/main">Express Way</Link></h2>
             </div>

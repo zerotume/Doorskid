@@ -342,9 +342,14 @@ function ServerChannels({servers, path, url, outerHistory, socket, user, newServ
                 </div>)}
                 <div className="messages-whole-container">
                     <div className="channel-header">
-                        <h3>
-                            Server {servers[serverId].name} {channelId!=='none'?`, Channel ${servers[serverId].channelObj[channelId].name}`:`Has No Channels Now --- Try or Tell the Mod to Create a Channel!`}
-                        </h3>
+                        {servers[serverId]?( <h3>
+
+                                    Server {servers[serverId]?.name}
+                                    {channelId!=='none'?`, Channel ${
+                                        (servers[serverId] && servers[serverId].channelObj[channelId])?servers[serverId].channelObj[channelId].name:'Loading...'
+                                        }`:`Has No Channels Now --- Try or Tell the Mod to Create a Channel!`}
+
+                        </h3>):(<h3>"Loading..."</h3>)}
                     </div>
                     <div className="messages-container" >
                         {isLoaded && messages}

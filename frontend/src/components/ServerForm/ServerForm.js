@@ -38,7 +38,8 @@ function ServerForm({server, socket, formType, setShowServerEdit, setShowServerC
             // socket.emit("somethingChanged", {serverId:server.id});
             dispatch(getServersThunk())
             setRerender({});
-            return history.replace(`/main/${data.id}/${server.Channels[0]?server.Channels[0].id:'none'}`);
+            setServerName("")
+            return history.replace(`/main/${data.id}/${server.Channels?server.Channels[0].id:'none'}`);
         }
     }
 
