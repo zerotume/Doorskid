@@ -1,14 +1,19 @@
 import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 import { Link, useHistory } from "react-router-dom";
+import { getServersThunk } from "../../store/servers";
 import "./ProblemPage.css";
 
 function ProblemPage(){
 
     const history = useHistory();
     const [timer,setTimer] = useState(5);
+    const dispatch = useDispatch();
 
 
     useEffect(() => {
+
+        dispatch(getServersThunk());
         setTimeout(() => {
             history.replace("/main");
         }, 3000);

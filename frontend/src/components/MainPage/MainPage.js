@@ -48,6 +48,15 @@ function MainPage({sessionLoaded}){
                 console.log(`User ${sessionUser.id} got new message in server ${data.serverId} channel ${data.channelId}`)
                 if(serverId !== data.serverId.toString())setNewServerMessage({...newServerMessage, [data.serverId]:true});
                 if(channelId !== data.channelId.toString())setNewChannelMessage({...newChannelMessage, [data.channelId]:true});
+                if(data.serverId.toString() === serverId){
+                    if(data.channelId.toString() === channelId){
+                        if(channelId!=='none'){
+                            // dispatch(getServersThunk())
+                            dispatch(getChannelmessagesThunk(channelId));
+                            // messageContainer.current.scrollIntoView({behavior:"smooth"});//doesn't work
+                        }
+                    }
+                }
             }
         });
 
@@ -200,6 +209,7 @@ function ServerChannels({servers, path, url, outerHistory, socket, user, newServ
             if(data.serverId.toString() === serverId){
                 if(data.channelId.toString() === channelId){
                     if(channelId!=='none'){
+                        // dispatch(getServersThunk())
                         dispatch(getChannelmessagesThunk(channelId));
                         // messageContainer.current.scrollIntoView({behavior:"smooth"});//doesn't work
                     }
