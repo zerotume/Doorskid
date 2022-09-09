@@ -1,11 +1,11 @@
-const { useState } = require("react");
+const { useState, useEffect } = require("react");
 const { useDispatch, useSelector } = require("react-redux");
 const { useHistory } = require("react-router-dom");
 const { editChannelThunk, createChannelThunk } = require("../../store/channels");
 const { createServerThunk, getServersThunk } = require("../../store/servers");
 
 
-function ChannelForm({channel, socket, formType, setShowChannelEdit, sessionLoaded, setShowChannelCreate, setRerender}){
+function ChannelForm({channel, socket, formType, setShowChannelEdit, sessionLoaded, setShowChannelCreate, setRerender, showChannelEdit, showChannelCreate}){
     const dispatch = useDispatch();
     const user = useSelector(state => state.session.user);
     const [channelName, setChannelName] = useState(channel.name || '')
@@ -16,6 +16,10 @@ function ChannelForm({channel, socket, formType, setShowChannelEdit, sessionLoad
         "Create Channel":createChannelThunk,
         "Edit Channel":editChannelThunk
     }
+
+    useEffect(() => {
+        setChannelName(channel.name || '')
+    },[showChannelEdit, showChannelCreate]);
 
     const handleSubmit = async e => {
         e.preventDefault();

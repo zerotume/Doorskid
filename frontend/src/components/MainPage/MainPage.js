@@ -112,7 +112,7 @@ function MainPage({sessionLoaded}){
                                     {/* // <button className="server-item-button">{e.name}</button> */}
                                 </div>
                                 <div className="update-server-show" hidden={e.id!==showServerEdit}>
-                                    <ServerForm formType={"Edit Server"} server={e} setShowServerEdit={setShowServerEdit} sessionLoaded={sessionLoaded} />
+                                    <ServerForm showServerEdit={showServerEdit} showServerCreate={showServerCreate} formType={"Edit Server"} server={e} setShowServerEdit={setShowServerEdit} sessionLoaded={sessionLoaded} />
                                     <button className="close-server-form-button" onClick={() => setShowServerEdit(-1)}>Cancel <i class="fa-solid fa-xmark"></i></button>
                                 </div>
                             </div>
@@ -177,6 +177,7 @@ function ServerChannels({servers, path, url, outerHistory, socket, user, newServ
     const [showChannelEdit, setShowChannelEdit] = useState(-1);
     const [showChannelmessageEdit, setShowChannelmessageEdit] = useState(-1);
     const [showChannelCreate, setShowChannelCreate] = useState(false);
+    const [shouSubRerender, setShowSubRerender] = useState({});
 //maybe channelmessages to empty after every click?
     const channelmessages = useSelector(state => state.channelmessages);
     if(channelId !== 'none') channels = servers[serverId]?.Channels;
@@ -200,7 +201,7 @@ function ServerChannels({servers, path, url, outerHistory, socket, user, newServ
                 if(data.channelId.toString() === channelId){
                     if(channelId!=='none'){
                         dispatch(getChannelmessagesThunk(channelId));
-                        messageContainer.current.scrollIntoView({behavior:"smooth"});//doesn't work
+                        // messageContainer.current.scrollIntoView({behavior:"smooth"});//doesn't work
                     }
                 }
             }
@@ -265,7 +266,7 @@ function ServerChannels({servers, path, url, outerHistory, socket, user, newServ
     // console.log("cms", channelmessages)
     let messages = null;
     if(isLoaded && channelmessages && channelmessages.channelmessageList && channelmessages.channelmessageList.length){
-        messages = (channelmessages.channelmessageList.map(e => (
+        messages = (channelmessages.channelmessageList.sort((a,b) => a.id-b.id).map(e => (
             <div>
                 <div className="single-message-container">
                     <div className="message-main-container">
@@ -274,7 +275,7 @@ function ServerChannels({servers, path, url, outerHistory, socket, user, newServ
                     </div>
                     <div className="message-button-container">
                         <button className="message-button message-edit-button"
-                            onClick={() => setShowChannelmessageEdit(e.id)}
+                            onClick={() => dispatch(getChannelmessagesThunk(channelId)).then(() => setShowChannelmessageEdit(e.id))}
                             disabled={e.senderId.toString() !== userId.toString()}
                             hidden={e.senderId.toString() !== userId.toString()}>
                                 {/* <i class="fa-regular fa-gear"></i> */}
@@ -285,7 +286,7 @@ function ServerChannels({servers, path, url, outerHistory, socket, user, newServ
                 </div>
                 <div className="update-message-show" hidden={e.id!==showChannelmessageEdit}>
                     <ChannelmessageForm channelmessage={e}
-                            setShowChannelmessageEdit={setShowChannelmessageEdit}
+                            showChannelmessageEdit={showChannelmessageEdit} setShowChannelmessageEdit={setShowChannelmessageEdit}
                             sessionLoaded={sessionLoaded} socket={socket}
                             serverId={serverId} channelId={channelId}/>
                     <button className="close-server-form-button" onClick={() => setShowChannelmessageEdit(-1)}>Cancel <i class="fa-solid fa-xmark"></i></button>
@@ -302,8 +303,8 @@ function ServerChannels({servers, path, url, outerHistory, socket, user, newServ
 
     const deleteClick = id => async e => {
         e.preventDefault();
-        let only = false;
-        if(servers[serverId].Channels.length === 1)only = true;
+        // let only = false;
+        // if(servers[serverId].Channels.length === 1)only = true;
         const data = await dispatch(deleteChannelThunk(id));
         if(data.errors){
             //todo: error handling
@@ -311,11 +312,11 @@ function ServerChannels({servers, path, url, outerHistory, socket, user, newServ
             // console.log('here!');
             socket.emit("somethingDeleted", {serverId, channelId});
             setShowChannelCreate(false);
-            dispatch(getServersThunk()).then(() => {
-                // sId = serverId;
-                // serverId = null;
+            await dispatch(getServersThunk()).then(() => {
+                const filtered = servers[serverId].Channels.filter(e => e.id.toString() !== id.toString()).sort((a,b) => a.id - b.id);
+                console.log('checkChannelId',filtered)
                 channelId = null;
-                history.replace(`/main/${serverId}/${!only?servers[serverId].Channels[0].id:'none'}`)
+                history.replace(`/main/${serverId}/${filtered.length?servers[serverId].Channels[0].id:'none'}`)
                 return setRerender({});
             });
         }
@@ -349,7 +350,8 @@ function ServerChannels({servers, path, url, outerHistory, socket, user, newServ
                                     </div>
                                 </div>
                                 <div className="update-channel-show" hidden={c.id!==showChannelEdit}>
-                                    <ChannelForm formType={"Edit Channel"} channel={c} setShowChannelEdit={setShowChannelEdit} sessionLoaded={sessionLoaded} />
+                                    <ChannelForm formType={"Edit Channel"} channel={c} setShowChannelEdit={setShowChannelEdit} sessionLoaded={sessionLoaded}
+                                    showChannelEdit={showChannelEdit} showChannelCreate={showChannelCreate} />
                                     <button className="close-server-form-button" onClick={() => setShowChannelEdit(-1)}>Cancel <i class="fa-solid fa-xmark"></i></button>
                                 </div>
                             </div>
@@ -363,7 +365,7 @@ function ServerChannels({servers, path, url, outerHistory, socket, user, newServ
                                         (servers[serverId] && servers[serverId].channelObj && servers[serverId].channelObj[channelId])?servers[serverId].channelObj[channelId].name:'Loading...'
                                         }`:` Has No Channels Now --- Try or Tell the Mod to Create a Channel!`}
 
-                        </h3>):(<h3>"Loading..."</h3>)}
+                        </h3>):(<h3>Loading...</h3>)}
                     </div>
                     <div className="messages-container" >
                         {isLoaded && messages}

@@ -1,11 +1,11 @@
 import { createServerThunk, editServerThunk, getServersThunk } from "../../store/servers";
 
-const { useState } = require("react");
+const { useState, useEffect } = require("react");
 const { useDispatch, useSelector } = require("react-redux");
 const { useHistory } = require("react-router-dom");
 
 
-function ServerForm({server, socket, formType, setShowServerEdit, setShowServerCreate, sessionLoaded, setRerender}){
+function ServerForm({server, socket, formType, setShowServerEdit, setShowServerCreate, sessionLoaded, setRerender, showServerEdit, showServerCreate}){
     const dispatch = useDispatch();
     const user = useSelector(state => state.session.user);
     const [serverName, setServerName] = useState(server.name || '');
@@ -16,6 +16,10 @@ function ServerForm({server, socket, formType, setShowServerEdit, setShowServerC
         "Create Server":createServerThunk,
         "Edit Server":editServerThunk
     }
+
+    useEffect(() => {
+        setServerName(server.name || '');
+    },[showServerEdit, showServerCreate]);
 
     const handleSubmit = async e => {
         e.preventDefault();

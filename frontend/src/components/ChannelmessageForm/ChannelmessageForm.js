@@ -1,15 +1,19 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { getChannelmessagesThunk } from "../../store/channelmessages";
 
 
-function ChannelmessageForm({channelmessage, setShowChannelmessageEdit, sessionLoaded, socket, serverId, channelId}){
+function ChannelmessageForm({channelmessage, setShowChannelmessageEdit, sessionLoaded, socket, serverId, channelId, showChannelmessageEdit}){
     const dispatch = useDispatch();
     const user = useSelector(state => state.session.user);
     const [messageContent, setMessageContent] = useState(channelmessage.content || '');
     const [errors, setErrors] = useState([]);
     const history = useHistory();
+
+    useEffect(() => {
+        setMessageContent(channelmessage.content || '');
+    },[showChannelmessageEdit])
 
     const handleSubmit = async e => {
         e.preventDefault();
@@ -22,11 +26,13 @@ function ChannelmessageForm({channelmessage, setShowChannelmessageEdit, sessionL
         // if(data.errors){
         //     //todo: error handling
         // }else{
+        console.log('prev', messageContent);
         socket.emit("updateChannelmessage", {channelmessage, serverId, channelId})
         setShowChannelmessageEdit(-1);
         // if(formType === "Create Channel")setShowChannelCreate(false);
         setMessageContent('');
         dispatch(getChannelmessagesThunk(channelId));
+        console.log('after', messageContent);
         // }
     }
 
