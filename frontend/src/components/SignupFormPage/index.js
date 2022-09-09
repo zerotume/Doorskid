@@ -135,6 +135,9 @@ function SignupFormPage() {
             <button className="signup-submit" type="submit">Sign Up</button>
             <div className="register-to-login lo-re-div">
               <Link className='register-to-login-link lore-link' to="/login">Already have an account?</Link>
+              <p className='back-link'>
+                <Link className='login-to-register-link lore-link' to="/">Back and consider again</Link>
+              </p>
             </div>
           </form>
         </div>

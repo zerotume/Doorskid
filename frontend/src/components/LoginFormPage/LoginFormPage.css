@@ -92,3 +92,7 @@
 .login-page button, .signup-page button{
     cursor: pointer;
 }
+
+.back-link{
+    margin-top:0.3rem;
+}

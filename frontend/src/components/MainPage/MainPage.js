@@ -98,7 +98,7 @@ function MainPage({sessionLoaded}){
                     </div>
                     {servers &&
                         servers.serverList &&
-                        servers.serverList.length &&
+                        servers.serverList.length > 0 &&
                         servers.serverList.map(e => (
                             <div>
                                 <div className="server-item-container">
@@ -128,10 +128,10 @@ function MainPage({sessionLoaded}){
                 <Route exact path={path}>
                     <div className="main-empty-container">
                         <h2>Welcome to doorskid!</h2>
-                        <h2>Click a server to see messages!</h2>
+                        <h2>Click a server to see messages! {servers.serverList.length===0?'It looks empty...maybe try to create a new server?':''}</h2>
                         {servers && (
                             <>
-                                <h3>You're currently in {servers.serverList.length} servers.</h3>
+                                <h3>You're currently in {servers.serverList.length} servers. {servers.serverList.length===0?'Try to crete a new server or ask someone to invite you!':''}</h3>
                                 <h3>You are the moderator of {servers.serverList.filter(e => e.ownerId === sessionUser.id).length} server.</h3>
                             </>
                         )}
@@ -343,7 +343,7 @@ function ServerChannels({servers, path, url, outerHistory, socket, user, newServ
                 <div className="messages-whole-container">
                     <div className="channel-header">
                         <h3>
-                            Server {serverId} Channel {channelId}
+                            Server {servers[serverId].name} {channelId!=='none'?`, Channel ${servers[serverId].channelObj[channelId].name}`:`Has No Channels Now --- Try or Tell the Mod to Create a Channel!`}
                         </h3>
                     </div>
                     <div className="messages-container" >

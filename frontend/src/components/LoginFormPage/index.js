@@ -85,6 +85,9 @@ function LoginFormPage() {
         <div className='login-to-register lo-re-div'>
           <span className='login-to-register-text lore-text'>Need an account?</span>
           <Link className='login-to-register-link lore-link' to="/signup">Register</Link>
+          <p className='back-link'>
+            <Link className='login-to-register-link lore-link' to="/">Back and consider again</Link>
+          </p>
         </div>
       </div>
     </div>
