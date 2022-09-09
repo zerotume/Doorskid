@@ -123,11 +123,11 @@
     margin-top: -3rem;
 }
 
-.main-empty-container h3{
+.main-empty-container h1,.main-empty-container h2,.main-empty-container h3{
     margin-left: 15rem;
     margin-top:3rem;
     background-color: #36393f;
-    padding-top:1rem;
+    padding-top:3rem;
 }
 
 html{

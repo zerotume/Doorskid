@@ -54,15 +54,15 @@ io.on("connection", socket => {
       content:channelmessage.content
     });
     await message.save();
-    io.to(serverId.toString()).emit('channelbroadcast', {serverId, channelId})
+    socket.to(serverId.toString()).emit('channelbroadcast', {serverId, channelId})
   });
 
   socket.on("somethingDeleted", ({serverId, channelId}) => {
-    io.to(serverId.toString()).emit("deleteNotice", {serverId, channelId});
+    socket.to(serverId.toString()).emit("deleteNotice", {serverId, channelId});
   });
 
   socket.on("somethingChanged", ({serverId}) => {
-    io.to(serverId.toString()).emit("changedRerender")
+    socket.to(serverId.toString()).emit("changedRerender")
   })
 
 })

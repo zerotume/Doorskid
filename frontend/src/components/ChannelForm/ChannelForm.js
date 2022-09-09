@@ -34,10 +34,9 @@ function ChannelForm({channel, socket, formType, setShowChannelEdit, sessionLoad
             if(formType === "Create Channel")setShowChannelCreate(false);
             // socket.emit("somethingChanged", {serverId:channel.serverId});
             setChannelName(channel.name || '');
-            dispatch(getServersThunk()).then(() => {
-                setRerender({});
-                return history.replace(`/main`)
-            });
+            setRerender({});
+            dispatch(getServersThunk());
+            return history.replace(`/main/${channel.serverId}/${data.id}`)
         }
     }
 

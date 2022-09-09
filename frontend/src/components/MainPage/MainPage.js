@@ -72,8 +72,9 @@ function MainPage({sessionLoaded}){
             // console.log('if data')
         }else{
             // console.log('else')
-            socket.emit("somethingDeleted", {serverId, channelId});
-            dispatch(getServersThunk()).then(() => history.replace(``));
+            socket.emit("somethingDeleted", {serverId:id});
+            dispatch(getServersThunk())
+            history.replace(`/main`);
             // return <Redirect to="/main" />
             setShowServerCreate(false);
             return setRerender({});
@@ -126,7 +127,14 @@ function MainPage({sessionLoaded}){
             <Switch>
                 <Route exact path={path}>
                     <div className="main-empty-container">
-                        <h3>Click a server to see messages!</h3>
+                        <h2>Welcome to doorskid!</h2>
+                        <h2>Click a server to see messages!</h2>
+                        {servers && (
+                            <>
+                                <h3>You're currently in {servers.serverList.length} servers.</h3>
+                                <h3>You are the moderator of {servers.serverList.filter(e => e.ownerId === sessionUser.id).length} server.</h3>
+                            </>
+                        )}
                     </div>
                 </Route>
                 <Route path={`${path}/:serverId/:channelId`}>
@@ -159,7 +167,7 @@ function ServerChannels({servers, path, url, outerHistory, socket, user, newServ
     const [showChannelCreate, setShowChannelCreate] = useState(false);
 //maybe channelmessages to empty after every click?
     const channelmessages = useSelector(state => state.channelmessages);
-    if(channelId !== 'none') channels = servers[serverId].Channels;
+    if(channelId !== 'none') channels = servers[serverId]?.Channels;
     const messageContainer = useRef(null);
 
 
@@ -188,9 +196,9 @@ function ServerChannels({servers, path, url, outerHistory, socket, user, newServ
 
         socket.on("deleteNotice", data => {
             if(data.serverId.toString() === serverId){
-                if(data.channelId.toString() === channelId){
+                // if(data.channelId.toString() === channelId){
                     outerHistory.replace('/error')
-                }
+                // }
             }
         });
 
@@ -276,7 +284,7 @@ function ServerChannels({servers, path, url, outerHistory, socket, user, newServ
         messages = (<div></div>);
     }
 
-    if(isLoaded && messages && showChannelmessageEdit===-1)messageContainer.current.scrollIntoView({behavior:"smooth"});
+    // if(isLoaded && messages && showChannelmessageEdit===-1)messageContainer.current.scrollIntoView({behavior:"smooth"});
 
     // console.log(messages);
 
@@ -305,7 +313,7 @@ function ServerChannels({servers, path, url, outerHistory, socket, user, newServ
         // await dispatch
     }
 
-    return (<div className="channel-list-container">
+    return servers[serverId] && (<div className="channel-list-container">
                 {(<div className="channel-list">
                     <div className="channel-new-container">
                         <button className="channel-new-button" onClick={() => setShowChannelCreate(true)} disabled={servers[serverId].ownerId !== user.id} hidden={servers[serverId].ownerId !== user.id}>New Channel <i class="fa-solid fa-plus"></i></button>

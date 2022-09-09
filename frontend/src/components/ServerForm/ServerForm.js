@@ -36,11 +36,9 @@ function ServerForm({server, socket, formType, setShowServerEdit, setShowServerC
             if(formType==="Create Server")setShowServerCreate(false);
             // dispatch(getServersThunk());
             // socket.emit("somethingChanged", {serverId:server.id});
-            dispatch(getServersThunk()).then(() => {
-                setRerender({});
-                console.log('here')
+            dispatch(getServersThunk())
+            setRerender({});
                 return history.replace(`/main`)
-            });
         }
     }
 
