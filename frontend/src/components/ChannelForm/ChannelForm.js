@@ -58,6 +58,7 @@ function ChannelForm({channel, socket, formType, setShowChannelEdit, sessionLoad
                         <input
                         type="text"
                         pattern="[a-zA-Z0-9]{1,20}"
+                        title="1 to 20 alpha and numbers"
                         placeholder="1 to 20 alpha and numbers"
                         value={channelName}
                         style={{border:(channelName.length >= 20)?'2px red solid':''}}
@@ -65,7 +66,6 @@ function ChannelForm({channel, socket, formType, setShowChannelEdit, sessionLoad
                         maxlength="20"
                         onChange={(e) => setChannelName(e.target.value)}
                         required
-                        title="1 to 20 alpha and numbers"
                         />
                 </div>
                 <button className="channel-form-input-button"

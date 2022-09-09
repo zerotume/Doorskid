@@ -281,7 +281,7 @@ function ServerChannels({servers, path, url, outerHistory, socket, user, newServ
                 <div className="single-message-container">
                     <div className="message-main-container">
                         <div className="message-sender-container">{e.User.firstName} {e.User.lastName}</div>
-                        <div className="message-content-container">{e.content}</div>
+                        <div className="message-content-container">{e.content.trim()?e.content:'<trolling empty message>'}</div>
                     </div>
                     <div className="message-button-container">
                         <button className="message-button message-edit-button"

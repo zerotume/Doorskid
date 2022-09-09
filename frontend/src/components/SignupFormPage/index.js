@@ -77,6 +77,8 @@ function SignupFormPage() {
                 Username </label>
                 <input
                   type="text"
+                  pattern="[a-zA-Z0-9]{1,100}"
+                  title="1 to 100 numbers or alphabates"
                   style={{border:(errorString.includes('username')||errorObj.username)?'2px red solid':''}}
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
@@ -89,6 +91,8 @@ function SignupFormPage() {
                 First Name</label>
                 <input
                   type="text"
+                  pattern="[a-zA-Z0-9]{1,100}"
+                  title="1 to 100 numbers or alphabates"
                   value={firstName}
                   style={{border:(errorString.includes('firstName')||errorObj.firstName)?'2px red solid':''}}
                   onChange={(e) => setFirstName(e.target.value)}
@@ -101,6 +105,8 @@ function SignupFormPage() {
                 Last Name</label>
                 <input
                   type="text"
+                  pattern="[a-zA-Z0-9]{1,100}"
+                  title="1 to 100 numbers or alphabates"
                   value={lastName}
                   style={{border:(errorString.includes('lastName')||errorObj.lastName)?'2px red solid':''}}
                   onChange={(e) => setLastName(e.target.value)}
