@@ -83,7 +83,7 @@
     font-family: var(--font-primary);
     padding-left: 2rem;
     height: 100%;
-    width:65%;
+    width:80%;
 
 }
 
@@ -121,6 +121,7 @@
     width:100vw;
     z-index: 2;
     margin-top: -3rem;
+    font-family: var(--font-primary);
 }
 
 .main-empty-container h1,.main-empty-container h2,.main-empty-container h3{
@@ -358,6 +359,7 @@ ul.profile-dropdown button:hover{
     justify-content: center;
     align-items: center;
     height:10%;
-    margin-top: 1%;
+    margin-top: 1.2rem;
     margin-left: 18%;
+    font-size: 0.9rem;
 }

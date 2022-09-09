@@ -74,10 +74,10 @@ function MainPage({sessionLoaded}){
             // console.log('else')
             socket.emit("somethingDeleted", {serverId:id});
             dispatch(getServersThunk())
-            history.replace(`/main`);
             // return <Redirect to="/main" />
             setShowServerCreate(false);
-            return setRerender({});
+            setRerender({});
+            return history.push(`/main`);
         }
     }
 
@@ -118,15 +118,27 @@ function MainPage({sessionLoaded}){
                             </div>
                         ))}
                 </div>
+
                 <div className="profile-container">
                     <ProfileButton user={sessionUser} />
                 </div>
-
             </div>
+            {!serverId && (
+                <div className="main-empty-container">
+                <h2>Welcome to doorskid!</h2>
+                <h2>Click a server to see messages! {servers.serverList.length===0?'It looks empty...maybe try to create a new server?':''}</h2>
+                {servers && (
+                    <>
+                        <h3>You're currently in {servers.serverList.length} servers. {servers.serverList.length===0?'Try to crete a new server or ask someone to invite you!':''}</h3>
+                        <h3>You are the moderator of {servers.serverList.filter(e => e.ownerId === sessionUser.id).length} server.</h3>
+                    </>
+                )}
+            </div>
+            )}
 
             <Switch>
                 <Route exact path={path}>
-                    <div className="main-empty-container">
+                    {/* <div className="main-empty-container">
                         <h2>Welcome to doorskid!</h2>
                         <h2>Click a server to see messages! {servers.serverList.length===0?'It looks empty...maybe try to create a new server?':''}</h2>
                         {servers && (
@@ -135,7 +147,7 @@ function MainPage({sessionLoaded}){
                                 <h3>You are the moderator of {servers.serverList.filter(e => e.ownerId === sessionUser.id).length} server.</h3>
                             </>
                         )}
-                    </div>
+                    </div> */}
                 </Route>
                 <Route path={`${path}/:serverId/:channelId`}>
                     <ServerChannels servers={servers} path={path} url={url} user={sessionUser} sessionLoaded={sessionLoaded}
@@ -175,7 +187,7 @@ function ServerChannels({servers, path, url, outerHistory, socket, user, newServ
     // if(channelId !== 'none')setNewChannelMessage({...newChannelMessage, [channelId]:false});
 
     useEffect(() => {
-        messageContainer.current.scrollIntoView({behavior:"smooth"});
+        // messageContainer.current.scrollIntoView({behavior:"smooth"});
         console.log("rerendered, serverId", serverId);
         setIsLoaded(false);
         setContent('');
@@ -236,7 +248,7 @@ function ServerChannels({servers, path, url, outerHistory, socket, user, newServ
         const data = {serverId, channelId, content, userId, sendTime:d.getTime()};
         socket.emit("channelmessage", data);
         setContent('');
-        // await dispatch(getChannelmessagesThunk(channelId));
+        dispatch(getChannelmessagesThunk(channelId));
     }
 
     // const editMessage = id => async e => {
@@ -316,7 +328,7 @@ function ServerChannels({servers, path, url, outerHistory, socket, user, newServ
         // await dispatch
     }
 
-    return servers[serverId] && (<div className="channel-list-container">
+    return servers[serverId]?(<div className="channel-list-container">
                 {(<div className="channel-list">
                     <div className="channel-new-container">
                         <button className="channel-new-button" onClick={() => setShowChannelCreate(true)} disabled={servers[serverId].ownerId !== user.id} hidden={servers[serverId].ownerId !== user.id}>New Channel <i class="fa-solid fa-plus"></i></button>
@@ -345,12 +357,11 @@ function ServerChannels({servers, path, url, outerHistory, socket, user, newServ
                 </div>)}
                 <div className="messages-whole-container">
                     <div className="channel-header">
-                        {servers[serverId]?( <h3>
-
-                                    Server {servers[serverId]?.name}
+                        {servers && servers[serverId]?( <h3>
+                                    Server {servers[serverId]?.name+' '}
                                     {channelId!=='none'?`, Channel ${
-                                        (servers[serverId] && servers[serverId].channelObj[channelId])?servers[serverId].channelObj[channelId].name:'Loading...'
-                                        }`:`Has No Channels Now --- Try or Tell the Mod to Create a Channel!`}
+                                        (servers[serverId] && servers[serverId].channelObj && servers[serverId].channelObj[channelId])?servers[serverId].channelObj[channelId].name:'Loading...'
+                                        }`:` Has No Channels Now --- Try or Tell the Mod to Create a Channel!`}
 
                         </h3>):(<h3>"Loading..."</h3>)}
                     </div>
@@ -393,7 +404,18 @@ function ServerChannels({servers, path, url, outerHistory, socket, user, newServ
                         </form>
                     </div>
                 </div>
-            </div>)
+            </div>):(
+                <div className="main-empty-container">
+                <h2>Welcome to Doorskid! {servers[serverId]?'':'Looks like the previous server was nuked...'}</h2>
+                <h2>Click a server to see messages! {servers.serverList.length===0?'It looks empty...maybe try to create a new server?':''}</h2>
+                {servers && (
+                    <>
+                        <h3>You're currently in {servers.serverList.length} servers. {servers.serverList.length===0?'Try to crete a new server or ask someone to invite you!':''}</h3>
+                        <h3>You are the moderator of {servers.serverList.filter(e => e.ownerId === user.id).length} server.</h3>
+                    </>
+                )}
+            </div>
+            )
 }
 
 export default MainPage;

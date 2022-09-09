@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
+import { getChannelmessagesThunk } from "../../store/channelmessages";
 
 
 function ChannelmessageForm({channelmessage, setShowChannelmessageEdit, sessionLoaded, socket, serverId, channelId}){
@@ -25,7 +26,7 @@ function ChannelmessageForm({channelmessage, setShowChannelmessageEdit, sessionL
         setShowChannelmessageEdit(-1);
         // if(formType === "Create Channel")setShowChannelCreate(false);
         setMessageContent('');
-        // dispatch(getServersThunk()).then(() => history.replace(`/main`));
+        dispatch(getChannelmessagesThunk(channelId));
         // }
     }
 

@@ -54,7 +54,7 @@ io.on("connection", socket => {
       content:channelmessage.content
     });
     await message.save();
-    socket.to(serverId.toString()).emit('channelbroadcast', {serverId, channelId})
+    io.to(serverId.toString()).emit('channelbroadcast', {serverId, channelId})
   });
 
   socket.on("somethingDeleted", ({serverId, channelId}) => {
