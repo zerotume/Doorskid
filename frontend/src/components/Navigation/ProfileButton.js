@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
+import { useHistory } from "react-router-dom";
+import { getServersThunk } from "../../store/servers";
 import * as sessionActions from "../../store/session";
 
 
 function ProfileButton({user}){
     const dispatch = useDispatch();
+    const history = useHistory();
     const [showMenu, setShowMenu] = useState(false)
 
     const openMenu = () => {
@@ -30,6 +33,12 @@ function ProfileButton({user}){
         dispatch(sessionActions.logoutAction());
     }
 
+    const goback = e => {
+        e.preventDefault()
+        dispatch(getServersThunk());
+        history.push('/main')
+    }
+
     return (
         <div className="profile-bar">
             <button onClick={openMenu}>
@@ -42,6 +51,7 @@ function ProfileButton({user}){
                     <li>{user.email}</li>
                     <li>
                         <button onClick={logout}>Log Out</button>
+                        <button onClick={goback}>Close Channel!</button>
                     </li>
                 </ul>
             )}
