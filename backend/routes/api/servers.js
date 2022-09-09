@@ -8,16 +8,20 @@ const {User, Server, Channel} = require('../../db/models');
 
 const router = express.Router();
 
-router.get('/:id/users', restoreUser, requireAuth, serverUsersReq, authorListCheck, async (req,res,next) => {
-    let serverMembers = req.members;
-    return res.json(serverMembers)
-});
+router.get('/:id/users', restoreUser, requireAuth,
+    //serverUsersReq, authorListCheck,
+    async (req,res,next) => {
+        let serverMembers = req.members;
+        return res.json(serverMembers)
+    });
 
-router.get('/:id/channels', restoreUser, requireAuth, serverUsersReq, authorListCheck, async (req, res, next) => {
-    let server = req.server;
-    let serverChannels = await server.getChannels();
-    return res.json(serverChannels);
-});
+router.get('/:id/channels', restoreUser, requireAuth,
+    // serverUsersReq, authorListCheck,
+    async (req, res, next) => {
+        let server = req.server;
+        let serverChannels = await server.getChannels();
+        return res.json(serverChannels);
+    });
 
 const validateChannel = [
     check('name')
@@ -57,7 +61,7 @@ router.delete('/:id', restoreUser, requireAuth, serverReq, authorCheck, async(re
 
 router.get('/', restoreUser, requireAuth, async (req,res,next) => {
     const {user} = req;
-    const joinedServers = await user.getServers({
+    const joinedServers = await Server.findAll({
         joinTableAttributes: [],
         include:[
             {

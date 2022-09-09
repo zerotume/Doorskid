@@ -36,7 +36,9 @@ router.delete('/:id', restoreUser, requireAuth, channelReq, authorCheck, async (
     });
 })
 
-router.get('/:id/messages', restoreUser, requireAuth, channelUsersReq, authorListCheck, async (req, res, next) => {
+router.get('/:id/messages', restoreUser, requireAuth,
+// channelUsersReq, authorListCheck,
+async (req, res, next) => {
     // const channel = req.channel;
 
     const channelmessages = await Channelmessage.findAll({

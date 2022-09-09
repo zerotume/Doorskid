@@ -290,6 +290,8 @@ function ServerChannels({servers, path, url, outerHistory, socket, user, newServ
 
     const deleteClick = id => async e => {
         e.preventDefault();
+        let only = false;
+        if(servers[serverId].Channels.length === 1)only = true;
         const data = await dispatch(deleteChannelThunk(id));
         if(data.errors){
             //todo: error handling
@@ -301,7 +303,7 @@ function ServerChannels({servers, path, url, outerHistory, socket, user, newServ
                 // sId = serverId;
                 // serverId = null;
                 channelId = null;
-                history.replace(`/main/${serverId}/${servers[serverId].Channels[0]?servers[serverId].Channels[0].id:'none'}`)
+                history.replace(`/main/${serverId}/${!only?servers[serverId].Channels[0].id:'none'}`)
                 return setRerender({});
             });
         }
@@ -365,14 +367,14 @@ function ServerChannels({servers, path, url, outerHistory, socket, user, newServ
                                 Message:{content.length}/140
                                 </label>
                                 <div className="message-box-trolling-container" hidden={channelId!=='none'}>
-                                    <h4 className="message-box-trolling">
+                                    <h4 className="message-box-trolling" hidden={channelId!=='none'}>
                                         Hi My Friend, I didn't see no channels here.
                                     </h4>
-                                    <h4 className="message-box-trolling">
+                                    <h4 className="message-box-trolling" hidden={channelId!=='none'}>
                                         So I just blocked this part!
                                     </h4>
-                                    <h4 className="message-box-trolling">
-                                        Until you or the mode create a channel for this server.
+                                    <h4 className="message-box-trolling" hidden={channelId!=='none'}>
+                                        ...until you or the mode create a channel for this server.
                                     </h4>
                                 </div>
                                 <textarea
