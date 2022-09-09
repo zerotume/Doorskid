@@ -298,9 +298,10 @@ function ServerChannels({servers, path, url, outerHistory, socket, user, newServ
             socket.emit("somethingDeleted", {serverId, channelId});
             setShowChannelCreate(false);
             dispatch(getServersThunk()).then(() => {
-                serverId = null;
+                // sId = serverId;
+                // serverId = null;
                 channelId = null;
-                history.replace(`/main`)
+                history.replace(`/main/${serverId}/${servers[serverId].Channels[0]?servers[serverId].Channels[0].id:'none'}`)
                 return setRerender({});
             });
         }
@@ -363,6 +364,17 @@ function ServerChannels({servers, path, url, outerHistory, socket, user, newServ
                                 >
                                 Message:{content.length}/140
                                 </label>
+                                <div className="message-box-trolling-container" hidden={channelId!=='none'}>
+                                    <h4 className="message-box-trolling">
+                                        Hi My Friend, I didn't see no channels here.
+                                    </h4>
+                                    <h4 className="message-box-trolling">
+                                        So I just blocked this part!
+                                    </h4>
+                                    <h4 className="message-box-trolling">
+                                        Until you or the mode create a channel for this server.
+                                    </h4>
+                                </div>
                                 <textarea
                                     type="text"
                                     disabled={channelId === 'none'}

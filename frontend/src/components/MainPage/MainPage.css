@@ -343,3 +343,21 @@ ul.profile-dropdown button:hover{
     color: #737d7b;
     cursor:not-allowed;
 }
+
+.message-box-trolling{
+    line-height: 0rem;
+    margin-top: 0rem;
+    color:#737d7b;
+}
+
+.message-box-trolling-container{
+    position:absolute;
+    cursor:not-allowed;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height:10%;
+    margin-top: 1%;
+    margin-left: 18%;
+}
