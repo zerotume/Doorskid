@@ -316,7 +316,7 @@ function ServerChannels({servers, path, url, outerHistory, socket, user, newServ
                 const filtered = servers[serverId].Channels.filter(e => e.id.toString() !== id.toString()).sort((a,b) => a.id - b.id);
                 console.log('checkChannelId',filtered)
                 channelId = null;
-                history.replace(`/main/${serverId}/${filtered.length?servers[serverId].Channels[0].id:'none'}`)
+                history.replace(`/main/${serverId}/${filtered.length?filtered[0].id:'none'}`)
                 return setRerender({});
             });
         }
