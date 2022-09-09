@@ -40,7 +40,24 @@ function LoginFormPage() {
             setErrors(Object.values(data.errors));
             // setErrorObj(data.errors);
           }
+        }
+      });
+  }
 
+  const clickDemoAnother = e => {
+    e.preventDefault();
+    const user = {credential:"user1@user.io", password:"password"};
+    return dispatch(sessionActions.loginAction(user))
+      .catch(async (res) => {
+        const data = await res.json();
+        if(data && data.errors){
+          if(Array.isArray(data.errors)){
+            setErrors(data.errors);
+            // setErrorString(data.errors.join('/'))
+          }else{
+            setErrors(Object.values(data.errors));
+            // setErrorObj(data.errors);
+          }
         }
       });
   }
@@ -82,6 +99,7 @@ function LoginFormPage() {
           <button className='login-submit' type="submit">Log In</button>
         </form>
           <button className='demo-login-submit' type="submit" onClick={clickDemo}>Log In With Demo User</button>
+          <button className='demo-login-submit' type="submit" onClick={clickDemoAnother}>Log In With Another Demo User</button>
         <div className='login-to-register lo-re-div'>
           <span className='login-to-register-text lore-text'>Need an account?</span>
           <Link className='login-to-register-link lore-link' to="/signup">Register</Link>
