@@ -74,6 +74,7 @@
     flex-direction: row;
     justify-content: space-between;
     padding-right: 1rem;
+    width:100%;
 }
 
 .messages-whole-container{
@@ -141,11 +142,14 @@ html{
     pointer-events: none;
     font-weight: 600;
     color: antiquewhite;
+}
 
+.channel-buttons{
+    width:30%;
 }
 
 .channel-item-link{
-    width:14rem;
+    width:12.5rem;
 }
 
 .server-item-link{
