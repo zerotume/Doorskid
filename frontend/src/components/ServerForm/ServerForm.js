@@ -55,20 +55,20 @@ function ServerForm({server, socket, formType, setShowServerEdit, setShowServerC
                 </ul>
                 <div className="server-form-label">
                     <label
-                    style={{color:(serverName.length >= 10)?'#f08486':''}}
+                    style={{color:(serverName.length >= 8)?'#f08486':''}}
                     >
-                        Server Name:{serverName.length}/10</label>
+                        Server Name:{serverName.length}/8</label>
                         <input
                         type="text"
-                        placeholder="1 to 10 alpha and numbers"
                         value={serverName}
-                        style={{border:(serverName.length >= 10)?'2px red solid':''}}
+                        style={{border:(serverName.length >= 8)?'2px red solid':''}}
                         onChange={(e) => setServerName(e.target.value)}
                         required
                         minlength="1"
-                        maxlength="10"
-                        pattern="[a-zA-Z0-9]{1,10}"
-                        title="1 to 10 alpha and numbers"
+                        maxlength="8"
+                        pattern="[a-z0-9]{1,8}"
+                        title="1 to 8 lower alpha and numbers"
+                        placeholder="1 to 8 lower alpha and numbers"
                         />
                 </div>
                 <button className="server-form-input-button"

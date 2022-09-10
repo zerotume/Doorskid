@@ -3,7 +3,7 @@
     display: flex;
     color:whitesmoke;
     flex-direction: column;
-    width:12rem;
+    width:14rem;
     position: fixed;
     height:100vh;
     margin-top:-0.5rem;
@@ -38,6 +38,7 @@
     line-height: 2rem;
     justify-content: space-between;
     padding-right: 1rem;
+    width:96%
 }
 
 .channel-list-container{
@@ -50,7 +51,7 @@
     height:110%;
     margin-top:-1rem;
     margin-bottom:-1rem;
-    margin-left:11rem;
+    margin-left:13rem;
     padding-left: 2rem;
     font-family: var(--font-primary);
 }
@@ -83,7 +84,7 @@
     font-family: var(--font-primary);
     padding-left: 2rem;
     height: 100%;
-    width:80%;
+    width:76%;
 
 }
 
@@ -140,6 +141,15 @@ html{
     pointer-events: none;
     font-weight: 600;
     color: antiquewhite;
+
+}
+
+.channel-item-link{
+    width:14rem;
+}
+
+.server-item-link{
+    width:8rem;
 }
 
 .server-item-link[disabled]{
@@ -147,6 +157,7 @@ html{
     pointer-events: none;
     color: antiquewhite;
     font-weight: 600;
+
 }
 
 .profile-container{

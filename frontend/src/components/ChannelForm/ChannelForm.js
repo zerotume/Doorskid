@@ -52,18 +52,18 @@ function ChannelForm({channel, socket, formType, setShowChannelEdit, sessionLoad
                 </ul>
                 <div className="channel-form-label">
                     <label
-                        style={{color:(channelName.length >= 20)?'#f08486':''}}
+                        style={{color:(channelName.length >= 15)?'#f08486':''}}
                     >
-                        Channel Name:{channelName.length}/20</label>
+                        Channel Name:{channelName.length}/15</label>
                         <input
                         type="text"
-                        pattern="[a-zA-Z0-9]{1,20}"
-                        title="1 to 20 alpha and numbers"
-                        placeholder="1 to 20 alpha and numbers"
+                        pattern="[a-z0-9]{1,15}"
+                        title="1 to 15 lower alpha and numbers"
+                        placeholder="1 to 15 lower alpha and numbers"
                         value={channelName}
-                        style={{border:(channelName.length >= 20)?'2px red solid':''}}
+                        style={{border:(channelName.length >= 15)?'2px red solid':''}}
                         minlength="1"
-                        maxlength="20"
+                        maxlength="15"
                         onChange={(e) => setChannelName(e.target.value)}
                         required
                         />
