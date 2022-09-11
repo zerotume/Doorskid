@@ -120,6 +120,8 @@ function SignupFormPage() {
                 <input
                   type="password"
                   value={password}
+                  pattern="[^ ]+"
+                  title="No spaces allowed for password!"
                   style={{border:(errorString.includes('password')||errorObj.password)?'2px red solid':''}}
                   onChange={(e) => setPassword(e.target.value)}
                   required
@@ -132,6 +134,8 @@ function SignupFormPage() {
                 <input
                   type="password"
                   value={confirmPassword}
+                  pattern="[^ ]+"
+                  title="No spaces allowed for password!"
                   style={{border:(errorString.includes('password')||errorObj.password)?'2px red solid':''}}
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   required

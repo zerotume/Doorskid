@@ -129,7 +129,7 @@ function MainPage({sessionLoaded}){
                 </div>
 
                 <div className="profile-container">
-                    <ProfileButton user={sessionUser} />
+                    <ProfileButton serverId={serverId} user={sessionUser} />
                 </div>
             </div>
             {!serverId && (

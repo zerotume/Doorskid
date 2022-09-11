@@ -5,7 +5,7 @@ import { getServersThunk } from "../../store/servers";
 import * as sessionActions from "../../store/session";
 
 
-function ProfileButton({user}){
+function ProfileButton({user,serverId}){
     const dispatch = useDispatch();
     const history = useHistory();
     const [showMenu, setShowMenu] = useState(false)
@@ -51,7 +51,7 @@ function ProfileButton({user}){
                     <li>{user.email}</li>
                     <li>
                         <button onClick={logout}>Log Out</button>
-                        <button onClick={goback}>Close Channel!</button>
+                        <button onClick={goback} hidden={!serverId}>Close Channel!</button>
                     </li>
                 </ul>
             )}
