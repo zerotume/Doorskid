@@ -83,7 +83,7 @@ User have full CRUD function for channel. U and D are only permitted to the owne
 ![UpdateChannel](./feature_screenshots/UpdateChannel.JPG)
 ![DeleteChannel](./feature_screenshots/DeleteChannel.JPG)
 
-### Channel
+### Message
 
 Messages are live messages. All CRUD for the messages are triggered with SOCKET.IO so the other user could see the message list live.
 
