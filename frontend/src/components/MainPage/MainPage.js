@@ -132,7 +132,7 @@ function MainPage({sessionLoaded}){
                     <ProfileButton serverId={serverId} user={sessionUser} />
                 </div>
             </div>
-            {(!serverId || !parseInt(serverId)) && (
+            {(!serverId || !Number(serverId)) && (
                 <div className="main-empty-container">
                 <h2>Welcome to doorskid!</h2>
                 <h2>Click a server to see messages! {servers.serverList.length===0?'It looks empty...maybe try to create a new server?':''}</h2>
