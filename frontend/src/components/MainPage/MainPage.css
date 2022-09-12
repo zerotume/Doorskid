@@ -378,3 +378,20 @@ ul.profile-dropdown button:hover{
     margin-left: 18%;
     font-size: 0.9rem;
 }
+
+.profile-user-name{
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: initial;
+    word-break: break-word;
+}
+
+.profile-bar li button{
+    width:9rem;
+}
+
+.profile-bar ul{
+    display: flex;
+    flex-direction: column;
+}

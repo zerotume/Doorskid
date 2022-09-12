@@ -43,14 +43,16 @@ function ProfileButton({user,serverId}){
         <div className="profile-bar">
             <button onClick={openMenu}>
                 <i className="fas fa-user-circle"></i>
-                <span className="profile-bar-text">  {user.firstName}  {user.lastName}</span>
+                <span className="profile-bar-text">  {user.firstName[0]}  {user.lastName[0]}</span>
             </button>
             {showMenu && (
                 <ul className="profile-dropdown">
-                    <li>{user.username}</li>
-                    <li>{user.email}</li>
+                    <li className="profile-user-name">{user.username}</li>
+                    {/* <li>{user.email}</li> */}
                     <li>
                         <button onClick={logout}>Log Out</button>
+                    </li>
+                    <li>
                         <button onClick={goback} hidden={!serverId}>Close Channel!</button>
                     </li>
                 </ul>
