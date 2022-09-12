@@ -77,8 +77,8 @@ function SignupFormPage() {
                 Username </label>
                 <input
                   type="text"
-                  pattern="[a-zA-Z0-9]{1,20}"
-                  title="1 to 20 numbers or alphabates"
+                  pattern="[a-z0-9]{1,15}"
+                  title="1 to 15 numbers and lower alphabates"
                   style={{border:(errorString.includes('username')||errorObj.username)?'2px red solid':''}}
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
