@@ -4,7 +4,7 @@ Discord is a web application for practicing web developent. It is inspired by Di
 It mimics an online chatting app, for people to chatting, replying and trolling others.
 
 ### How to launch the full site:
-[swEtsy](https://heng-doorskid.herokuapp.com/)
+[Doorskid](https://heng-doorskid.herokuapp.com/)
 
 ## Useful Links:
 [Wiki of this Project](https://github.com/zerotume/Doorskid/wiki)
