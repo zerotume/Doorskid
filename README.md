@@ -1,7 +1,6 @@
 #  `Discord` Clone: `Doorskid`
 
-Doorskid is a web application for practicing web developent. It is inspired by Discord.
-It mimics an online chatting app, for people to chatting, replying and trolling others.
+Doorskid is a web application for practicing web development. It is inspired by Discord. It mimics an online chatting app for people to chat, reply and troll others.
 
 ### How to launch the full site:
 [Doorskid](https://heng-doorskid.herokuapp.com/)
