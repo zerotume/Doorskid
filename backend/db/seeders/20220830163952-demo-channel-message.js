@@ -15,62 +15,67 @@ module.exports = {
     {
       senderId:1,
       channelId:1,
-      content:'HelloMeow!'
+      content:'Anyone read the 9th edition of Psychology? That\'s so helpful!'
     },
     {
       senderId:2,
       channelId:1,
-      content:'HelloMeow!'
+      content:'I\'m glad you can get some book helpful to our lives.'
     },
     {
       senderId:1,
       channelId:2,
-      content:'HelloMeow!'
+      content:'Anyone know that how to fix a computer?'
     },
     {
       senderId:2,
       channelId:2,
-      content:'HelloMeow!'
+      content:'Ummm... at least clarifying your question?'
     },
     {
       senderId:2,
       channelId:1,
-      content:'HelloMeow!'
+      content:'Just bought it!'
     },
     {
       senderId:3,
       channelId:3,
-      content:'HelloMeow!'
+      content:'I saw a orange cat outside my door! She\'s so cute!'
     },
     {
       senderId:2,
       channelId:3,
-      content:'HelloMeow!'
+      content:'Really! I love orange kitty!!'
     },
     {
       senderId:3,
       channelId:4,
-      content:'HelloMeow!'
+      content:'I don\'t want to go home, zoo is much better.'
+    },
+    {
+      senderId:2,
+      channelId:4,
+      content:'Say it again after seeing the orange cat lmao'
     },
     {
       senderId:1,
       channelId:5,
-      content:'HelloMeow!'
+      content:'Any suggestions about what should I wear for the party today? It\'s a birthday party.'
     },
     {
       senderId:3,
       channelId:5,
-      content:'HelloMeow!'
+      content:'All I want to say is, make sure your outfit is something easy to clean, or you don\'t mind if it\'s dirty.'
     },
     {
       senderId:1,
       channelId:6,
-      content:'HelloMeow!'
+      content:'Paid 4 bulks for a t-shirt today. Might be a disposable thing...'
     },
     {
       senderId:3,
       channelId:6,
-      content:'HelloMeow!'
+      content:'Wat, a disposable T-shirt? First time know it. So you just throw it after wearing once??'
     },
    ])
   },

@@ -4,27 +4,27 @@ module.exports = {
   async up (queryInterface, Sequelize) {
     return queryInterface.bulkInsert('Channels',[
       {
-        name:'s1c1',
+        name:'humanity',
         serverId:1
       },
       {
-        name:'s1c2',
+        name:'digital',
         serverId:1
       },
       {
-        name:'s2c1',
+        name:'catlover',
         serverId:2
       },
       {
-        name:'s2c2',
+        name:'zoos',
         serverId:2
       },
       {
-        name:'s3c1',
+        name:'suggest',
         serverId:3
       },
       {
-        name:'s3c2',
+        name:'rant',
         serverId:3
       },
     ])

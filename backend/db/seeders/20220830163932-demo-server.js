@@ -14,15 +14,15 @@ module.exports = {
 
     return queryInterface.bulkInsert('Servers',[
       {
-        name:'server1',
+        name:'lifetalk',
         ownerId:1
       },
       {
-        name:'server2',
+        name:'rant',
         ownerId:2
       },
       {
-        name:'server3',
+        name:'suggest',
         ownerId:3
       },
     ])
