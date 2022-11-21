@@ -50,6 +50,41 @@ function SignupFormPage() {
         }
     }
 
+    const clickDemo = e => {
+      e.preventDefault();
+      const user = {credential:"demo@user.io", password:"password"};
+      return dispatch(sessionActions.loginAction(user))
+        .catch(async (res) => {
+          const data = await res.json();
+          if(data && data.errors){
+            if(Array.isArray(data.errors)){
+              setErrors(data.errors);
+              // setErrorString(data.errors.join('/'))
+            }else{
+              setErrors(Object.values(data.errors));
+              // setErrorObj(data.errors);
+            }
+          }
+        });
+    }
+
+    const clickDemoAnother = e => {
+      e.preventDefault();
+      const user = {credential:"user1@user.io", password:"password"};
+      return dispatch(sessionActions.loginAction(user))
+        .catch(async (res) => {
+          const data = await res.json();
+          if(data && data.errors){
+            if(Array.isArray(data.errors)){
+              setErrors(data.errors);
+              // setErrorString(data.errors.join('/'))
+            }else{
+              setErrors(Object.values(data.errors));
+              // setErrorObj(data.errors);
+            }
+          }
+        });
+    }
 
 
     return(
@@ -143,13 +178,16 @@ function SignupFormPage() {
 
             </div>
             <button className="signup-submit" type="submit">Sign Up</button>
-            <div className="register-to-login lo-re-div">
+
+          </form>
+          <button className='demo-login-submit' type="submit" onClick={clickDemo}>Log In With Demo User</button>
+          <button className='demo-login-submit' type="submit" onClick={clickDemoAnother}>Log In With Another Demo User</button>
+          <div className="register-to-login lo-re-div">
               <Link className='register-to-login-link lore-link' to="/login">Already have an account?</Link>
               <p className='back-link'>
                 <Link className='login-to-register-link lore-link' to="/">Back and consider again</Link>
               </p>
             </div>
-          </form>
         </div>
       </div>
     );
